@@ -10,6 +10,7 @@ export class UserController {
         private readonly userService : UserService
     ){}
 
+    // POST /user/login
     @Post('login')
     async userLogin(
         @Body('email') email : string,
@@ -29,6 +30,7 @@ export class UserController {
         }
     }
 
+    // POST /user/register
     @Post('register')
     async userRegister(
         @Body() userData : {email: string, password: string, firstName: string, lastName: string, education: string},

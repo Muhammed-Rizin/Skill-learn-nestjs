@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Res } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Res, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { Response } from 'express';
 
@@ -8,6 +8,7 @@ export class AdminController {
         private readonly adminService : AdminService
     ){}
 
+    // POST /admin/login
     @Post('login')
     async adminLogin(
         @Body('email') email : string,
@@ -21,33 +22,79 @@ export class AdminController {
         }
     }
 
-    @Get('get_users')
-    async getUser(@Res() res : Response){
+    // GET /admin/get_totalusers
+    @Get('get_totalusers')
+    async getTotalUser(@Res() res : Response){
         try {
-            return this.adminService.getUsers(res)
+            return this.adminService.getTotalUsers(res)
         } catch (error) {
             return res.status(500).json({status : 'error', message : 'User fetching failed'})
         }
     }
-    
-    @Get('get_professionals')
-    async getProfessionals(@Res() res : Response){
+
+    // GET /admin/get_totalprofessionals
+    @Get('get_totalprofessionals')
+    async getTotalProfessionals(@Res() res : Response){
         try {
-            return this.adminService.getProfessionals(res)
+            return this.adminService.getTotalProfessionals(res)
         } catch (error) {
             return res.status(500).json({status : 'error', message : 'Professional fetching failed'})
         }
     }
 
-    @Get('professional_requests')
-    async getProfessionalRequest(@Res() res : Response){
+    // GET /admin/totalprofessional_requests
+    @Get('totalprofessional_requests')
+    async getTotalProfessionalRequest(@Res() res : Response){
         try{
-            return this.adminService.getRequestedProfessionals(res)
+            return this.adminService.getTotalRequestedProfessionals(res)
         }catch(error){
             return res.status(500).json({status : 'error', message : 'Requested professional failed'})
         }
     }
 
+    // GET /admin/get_users
+    @Get('get_users')
+    async getUser(
+        @Query('page') page : number,
+        @Query('limit') limit : number,
+        @Res() res : Response
+    ){
+        try {
+            return this.adminService.getUsers(page, limit, res)
+        } catch (error) {
+            return res.status(500).json({status : 'error', message : 'User fetching failed'})
+        }
+    }
+    
+    // GET /admin/get_professionals
+    @Get('get_professionals')
+    async getProfessionals(
+        @Query('page') page : number,
+        @Query('limit') limit : number,
+        @Res() res : Response
+    ){
+        try {
+            return this.adminService.getProfessionals(page, limit, res)
+        } catch (error) {
+            return res.status(500).json({status : 'error', message : 'Professional fetching failed'})
+        }
+    }
+
+    // GET /admin/professional_requests
+    @Get('professional_requests')
+    async getProfessionalRequest(
+        @Query('page') page : number,
+        @Query('limit') limit : number,
+        @Res() res : Response
+    ){
+        try{
+            return this.adminService.getRequestedProfessionals(page, limit, res)
+        }catch(error){
+            return res.status(500).json({status : 'error', message : 'Requested professional failed'})
+        }
+    }
+
+    // PATCH /admin/blockUser
     @Patch('blockUser')
     async blockUser(@Body('id') id : string, @Res() res : Response){
         try {
@@ -57,6 +104,7 @@ export class AdminController {
         }
     }
 
+    // PATCH /admin/unblockUser
     @Patch('unblockUser')
     async unblockUser(@Body('id') id : string, @Res() res : Response){
         try {
@@ -66,6 +114,7 @@ export class AdminController {
         }
     }
 
+    // PATCH /admin/approveprofessionals
     @Patch('approveprofessionals')
     async approveProfessionals(@Body() id : string, @Res() res : Response){
         try {
@@ -75,6 +124,7 @@ export class AdminController {
         }
     }
 
+    // PATCH /admin/rejectProfessionals
     @Patch('rejectProfessionals')
     async rejectProfessionals(@Body() id : string, @Res() res : Response){
         try {
@@ -84,6 +134,7 @@ export class AdminController {
         }
     }
 
+    // PATCH /admin/blockprofessionals
     @Patch('blockprofessionals')
     async blockProfessionals(@Body() id : string, @Res() res : Response){
         try {
@@ -93,6 +144,7 @@ export class AdminController {
         }
     }
 
+    // PATCH /admin/unblockprofessionals
     @Patch('unblockprofessionals')
     async unblockProfessiionals(@Body() id : string, @Res() res : Response){
         try {

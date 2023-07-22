@@ -7,6 +7,7 @@ import { ProfessionalService } from './professional.service';
 export class ProfessionalController {
     constructor(private readonly professionalService : ProfessionalService){}
 
+    // POST /professional/login
     @Post('login') 
     async professionalLogin(
         @Body('email') email : string,
@@ -26,6 +27,7 @@ export class ProfessionalController {
         }
     }
 
+    // POST /professional/register 
     @Post('register')
     async professionalRegister(
         @Body() userData : {email: string, password: string, firstName: string, lastName: string, education: string},

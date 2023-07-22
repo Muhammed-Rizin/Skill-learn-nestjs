@@ -6,6 +6,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ObjectId } from 'mongoose';
 
 import { Admin, Professional, User } from './admin.model';
+import { type } from 'os';
+import { skip } from 'node:test';
 
 @Injectable()
 export class AdminService {
@@ -35,7 +37,7 @@ export class AdminService {
         }
     }
 
-    async getUsers(@Res() res : Response){
+    async getTotalUsers(@Res() res : Response){
         try {
             const userData = await this.findUsers(res)
             return res.status(200).json(userData)
@@ -45,7 +47,7 @@ export class AdminService {
         }
     }
 
-    async getProfessionals(@Res() res : Response){
+    async getTotalProfessionals(@Res() res : Response){
         try {
             const professionalData = await this.findProfessionals(res)
             return res.status(200).json(professionalData)
@@ -55,9 +57,46 @@ export class AdminService {
         }
     }
 
-    async getRequestedProfessionals(@Res() res : Response){
+    async getTotalRequestedProfessionals(@Res() res : Response){
         try {
             const professionalData = await this.professionalModel.find({approved : false})
+            return res.status(200).json(professionalData)
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({status : 'error', message : 'Requested professional failed'})
+        }
+    }
+
+
+    async getUsers(page : number, limit : number, @Res() res : Response){
+        try {
+            const skip = (page - 1) * limit
+
+            const userData = await this.userModel.find().skip(skip).limit(limit)
+            return res.status(200).json(userData)
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({status : 'error', message : 'User fetching failed'})
+        }
+    }
+
+    async getProfessionals(page : number, limit : number, @Res() res : Response){
+        try {
+            const skip = (page - 1) * limit
+
+            const professionalData = await this.professionalModel.find({approved : true}).skip(skip).limit(limit)
+            return res.status(200).json(professionalData)
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({status : 'error', message : 'Professional fetching failed'})
+        }
+    }
+
+    async getRequestedProfessionals(page : number, limit : number, @Res() res : Response){
+        try {
+            const skip = (page - 1) * limit
+
+            const professionalData = await this.professionalModel.find({approved : false}).skip(skip).limit(limit)
             return res.status(200).json(professionalData)
         } catch (error) {
             console.log(error.message)
@@ -91,7 +130,7 @@ export class AdminService {
         try {
             const professionalId = new mongoose.Types.ObjectId(id)
             await this.professionalModel.findByIdAndUpdate(professionalId, {$set : {approved : true, rejected : false}})
-            const professionalData = this.findProfessionals(res)
+            const professionalData = await this.professionalModel.find({approved : false})
             return res.status(200).json(professionalData)
         } catch (error) {
             console.log(error.message)
