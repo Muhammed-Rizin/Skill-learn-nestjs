@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Query, Get } from '@nestjs/common';
 import { Response } from 'express';
 
 import { ProfessionalService } from './professional.service';
@@ -40,5 +40,24 @@ export class ProfessionalController {
                 return res.status(400).json({message : 'Email already registered'})
             }
         }
+    }
+
+
+    // GET  /professional/forgetpassword
+    @Get('forgetpassword')
+    async professionalForgetPassword(@Query('email') email : string, @Res() res: Response){
+        return this.professionalService.professionalforgetPassword(email, res)
+    }
+
+    // GET /professional/forgetpassword/professional_details
+    @Get('forgetpassword/professional_details')
+    async professionalDetails(@Query('token') token : string, @Res() res : Response){
+        return this.professionalService.professionalDetails(token, res)
+    }
+
+    // POST /professional/newpassword
+    @Post('newpassword')
+    async professionalNewPassword(@Body('password') password : string, @Body('token') token : string, @Res() res : Response){
+        return this.professionalService.newPassword(password, token, res)
     }
 }

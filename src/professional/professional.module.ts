@@ -5,6 +5,7 @@ import { ProfessionalController } from './professional.controller';
 import { ProfessionalService } from './professional.service';
 import { professionalSchema } from './professional.model';
 import { JwtModule } from '@nestjs/jwt';
+import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { JwtModule } from '@nestjs/jwt';
     })
   ],
   controllers: [ProfessionalController],
-  providers: [ProfessionalService]
+  providers: [ProfessionalService, ForgetpasswordService]
 })
 export class ProfessionalModule {}

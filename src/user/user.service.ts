@@ -4,16 +4,19 @@ import { Model } from "mongoose";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import * as randomstring from 'randomstring'
 import * as dotenv from 'dotenv';
 dotenv.config()
 
 import { User } from './user.model';
+import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel('User') private readonly userModel : Model<User>,
-        private readonly jwt : JwtService
+        private readonly jwt : JwtService,
+        private forgetPassword : ForgetpasswordService
     ){}
 
     // User login 
@@ -81,6 +84,55 @@ export class UserService {
         } catch (error) {
             console.log(error.message)
             res.status(500).json({ status: 'error', message: 'User register failed' });
+        }
+    }
+
+
+    // forget password 
+    async userforgetPassword(email : string, @Res() res : Response){
+        try {
+            const userData = await this.userModel.findOne({email : email})
+            if(!userData){
+                return res.status(404).json({message : 'Email not registered'})
+            }
+
+            const token = randomstring.generate(20)
+
+            const sendMail = this.forgetPassword.forgetPassword(userData.firstName, email, token)
+            if(sendMail){
+                await this.userModel.findByIdAndUpdate(userData._id, {token : token})
+                return res.status(200).json({message : 'Check your email'})
+            }
+            
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async userDetails(token : string, @Res() res : Response) {
+        try {
+            const userData =  await this.userModel.findOne({token : token})
+            return res.status(200).json(userData)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async newPassword(password : string, token : string, @Res() res : Response){
+        try {
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt)
+            const userData = await this.userModel.findOneAndUpdate({token : token}, {$set : {password : hashedPassword}})
+
+            const payload = { _id: userData._id };
+            const jwttoken = this.jwt.sign(payload);
+            const data = await this.userModel.findOneAndUpdate({_id : userData._id},{$set : {token : jwttoken}})
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
 }

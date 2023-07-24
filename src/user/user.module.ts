@@ -5,6 +5,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { userSchema } from './user.model';
 import { JwtModule } from '@nestjs/jwt';
+import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
 
 @Module({
   imports : [
@@ -17,6 +18,6 @@ import { JwtModule } from '@nestjs/jwt';
     })
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService, ForgetpasswordService]
 })
 export class UserModule {}
