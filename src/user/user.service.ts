@@ -10,11 +10,13 @@ dotenv.config()
 
 import { User } from './user.model';
 import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
+import { Professional } from 'src/professional/professional.model';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel('User') private readonly userModel : Model<User>,
+        @InjectModel('Professional') private readonly professionalModel : Model<Professional>,
         private readonly jwt : JwtService,
         private forgetPassword : ForgetpasswordService
     ){}
@@ -133,6 +135,36 @@ export class UserService {
         } catch (error) {
             console.log(error)
             res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async isBlocked(id :string, @Res() res : Response) {
+        try {
+            const data = await this.userModel.findById(id)
+            return res.status(200).json( data.blocked)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async userData(id : string, @Res() res : Response) {
+        try {
+            const userData = await this.userModel.findById(id)
+            return res.status(200).json(userData)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async userDataByEmail(email : string, @Res() res : Response) {
+        try {
+            const userData = await this.professionalModel.findOne({email : email})
+            return res.status(200).json(userData)
+        } catch (error) {
+            console.log(error)
+        res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
 }

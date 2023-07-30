@@ -3,11 +3,13 @@ import { Response } from 'express';
 
 import { UserService } from './user.service';
 import { User } from './user.model';
+import { ChatService } from 'src/chat/chat.service';
 
 @Controller('user')
 export class UserController {
     constructor(
-        private readonly userService : UserService
+        private readonly userService : UserService,
+        private readonly chatService : ChatService
     ){}
 
     // POST /user/login
@@ -47,21 +49,81 @@ export class UserController {
 
 
     // GET  /user/forgetpassword
-    @Get('forgetpassword')
+    @Get('forgetpa/user/forgetpassword/user_detailsssword')
     async userForgetPassword(@Query('email') email : string, @Res() res: Response){
-        return this.userService.userforgetPassword(email, res)
+        try {
+            return this.userService.userforgetPassword(email, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
     }
 
     // GET /user/forgetpassword/user_details
     @Get('forgetpassword/user_details')
     async userDetails(@Query('token') token : string, @Res() res : Response){
-        return this.userService.userDetails(token, res)
+        try {
+            return this.userService.userDetails(token, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
     }
 
     // POST /user/newpassword
     @Post('newpassword')
     async userNewPassword(@Body('password') password : string, @Body('token') token : string, @Res() res : Response){
-        console.log(password, token)
-        return this.userService.newPassword(password, token, res)
+        try {
+            return this.userService.newPassword(password, token, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
     }
+
+    // GET /user/isblocked
+    @Get('isblocked') 
+    async isblocked(@Body('userid') id : string, @Res() res : Response){
+        try {
+            return await this.userService.isBlocked(id,res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    // GET /user/userdata
+    @Get('userdata')
+    async userData(@Body('userid') id : string, @Res() res : Response){
+        try {
+            return await this.userService.userData(id,res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    // GET /user/userdatabyemail
+    @Get('userdatabyemail')
+    async userDataByEmail(@Query('email') email :string, @Res() res : Response){
+        try {
+            return await this.userService.userDataByEmail(email, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    } 
+    // GET /user/getchats
+    @Get('getchats')
+    async getchats(@Body('userid') userid : string, @Res() res : Response) {
+        try {
+            return await this.chatService.getChats(userid, res)
+        } catch (error) {
+            res.status(500).json({message : 'internal server error'})
+        }
+    }
+    // GET /user/getchathistory
+    @Get('getchathistory')
+    async getChathistory(@Query('roomid') roomid : string, @Res() res : Response) {
+        try {
+            return await this.chatService.getChatHistory(roomid, res)
+        } catch (error) {
+            res.status(500).json({message : 'internal server error'})
+        }
+    }
+
 }

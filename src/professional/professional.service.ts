@@ -124,4 +124,23 @@ export class ProfessionalService {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
+    async isBlocked(id :string, @Res() res : Response) {
+        try {
+            const data = await this.professionalModel.findById(id)
+            return res.status(200).json( data.blocked)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async isApproved(id :string, @Res() res : Response) {
+        try {
+            const data = await this.professionalModel.findById(id)
+            return res.status(200).json( data.approved)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
 }

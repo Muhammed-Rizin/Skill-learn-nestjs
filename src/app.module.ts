@@ -1,5 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+dotenv.config()
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,8 +11,12 @@ import { ProfessionalModule } from './professional/professional.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ForgetpasswordService } from './mail/forgetpassword/forgetpassword.service';
 import { VerificationService } from './mail/verification/verification.service';
-import * as dotenv from 'dotenv';
-dotenv.config()
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { excluded } from './auth/exclude.auth';
+import { ChatGateway } from './chat/chat.gateway';
+import { ChatService } from './chat/chat.service';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -22,10 +28,15 @@ dotenv.config()
       global : true,
       secret: process.env.secret,
       signOptions: { expiresIn: '3d' },
-      secretOrPrivateKey : process.env.secret
     }),
+    AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ForgetpasswordService, VerificationService],
+  providers: [AppService, ForgetpasswordService, VerificationService, ChatGateway, ChatService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthService).exclude(...excluded).forRoutes('/*');
+  }
+}

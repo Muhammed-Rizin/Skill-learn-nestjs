@@ -60,4 +60,14 @@ export class ProfessionalController {
     async professionalNewPassword(@Body('password') password : string, @Body('token') token : string, @Res() res : Response){
         return this.professionalService.newPassword(password, token, res)
     }
+
+    @Get('isblocked') 
+    async isblocked(@Body('userid') id : string, @Res() res : Response){
+        return await this.professionalService.isBlocked(id,res)
+    }
+
+    @Get('isapproved')
+    async isapproved(@Body('userid') id : string, @Res() res : Response){
+        return await this.professionalService.isApproved(id, res)
+    }
 }

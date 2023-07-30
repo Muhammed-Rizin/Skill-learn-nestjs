@@ -2,12 +2,9 @@ import { Injectable, Res } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, mongo, set } from 'mongoose';
 import { Response } from 'express';
-import { JwtService } from '@nestjs/jwt';
-import { ObjectId } from 'mongoose';
+import { JwtService } from '@nestjs/jwt'
 
 import { Admin, Professional, User } from './admin.model';
-import { type } from 'os';
-import { skip } from 'node:test';
 
 @Injectable()
 export class AdminService {
@@ -106,7 +103,7 @@ export class AdminService {
 
     async blockUser(id : string, @Res() res : Response){
         try {
-            await this.userModel.findByIdAndUpdate(id, {$set : {blocked : true}})
+            const data = await this.userModel.findByIdAndUpdate(id, {$set : {blocked : true}})
             const userData = await this.findUsers(res)
             return res.status(200).json(userData)
         } catch (error) {
