@@ -1,6 +1,6 @@
 export const excluded = [
     '/user/login', 
-    '/user/login', 
+    '/user/register', 
     '/user/forgetpassword', 
     '/user/forgetpassword/user_details', 
     '/user/newpassword',

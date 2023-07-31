@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Get, Query} from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Query, Patch} from '@nestjs/common';
 import { Response } from 'express';
 
 import { UserService } from './user.service';
@@ -121,6 +121,43 @@ export class UserController {
     async getChathistory(@Query('roomid') roomid : string, @Res() res : Response) {
         try {
             return await this.chatService.getChatHistory(roomid, res)
+        } catch (error) {
+            res.status(500).json({message : 'internal server error'})
+        }
+    }
+
+    // PATCH /user/updateuser
+    @Patch('updateuser')
+    async updateUser(
+        @Body('userid') userid : string, 
+        @Body('data') userData : User, 
+        @Res() res : Response
+    ){
+        try {
+            return await this.userService.updateUser(userid, userData, res)
+        } catch (error) {
+            res.status(500).json({message : 'internal server error'})
+        }
+    }
+
+    @Get('sendverifymail')
+    async sendVerifyEmail(@Body('userid') userid : string, @Res() res : Response){
+        try {
+            return await this.userService.sendVerifyEmail(userid, res)
+        } catch (error) {
+            res.status(500).json({message : 'internal server error'})
+        }
+    }
+
+    // GET /user/verifyemail
+    @Get('verifyemail')
+    async verifyEmail(
+        @Query('token') token : string, 
+        @Body('userid') id : string,
+        @Res() res : Response
+    ){
+        try {
+            return this.userService.verifyEmail(id, token, res)
         } catch (error) {
             res.status(500).json({message : 'internal server error'})
         }

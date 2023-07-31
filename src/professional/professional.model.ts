@@ -24,8 +24,8 @@ export const professionalSchema = new mongoose.Schema({
     location: {
         type: String
     },
-    birthday: {
-        type: Date
+    qualification: {
+        type: String
     },
     bio: {
         type: String
@@ -40,7 +40,8 @@ export const professionalSchema = new mongoose.Schema({
         type: String
     },
     payment: {
-        type: String
+        type: Number,
+        default : 0
     },
     skill: {
         type: Array
@@ -54,7 +55,8 @@ export const professionalSchema = new mongoose.Schema({
         default: false
     },
     emailVerified: {
-        type: Boolean
+        type: Boolean,
+        default : false
     },
     token: {
         type: String
@@ -66,7 +68,20 @@ export const professionalSchema = new mongoose.Schema({
     rejected: {
         type: Boolean,
         default: false
+    },
+    field : {
+        type : String,
+    },
+    work : {
+        type : String,
+    },
+    emailToken: {
+        type: String
+    },
+    about  : {
+        type : String
     }
+
 })
 
 export interface Professional {
@@ -91,4 +106,9 @@ export interface Professional {
     skills ?: string[]
     approved ?: boolean
     rejected?: boolean
+    field?: string
+    work?: string
+    qualification?: string
+    emailToken?: string
+    about?: string
 }

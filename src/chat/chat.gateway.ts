@@ -13,13 +13,11 @@ export class ChatGateway implements OnGatewayConnection {
 
   handleConnection(socket: Socket) {
     const userId: string = socket.handshake.auth.userId;
-    console.log('a user connected')
   }
 
   @SubscribeMessage('join')
   handleJoinEvent(socket: Socket, roomName: string) {
     socket.join(roomName)
-    console.log('joined:', roomName)
   }
   @SubscribeMessage('message')
   async handleMessage(socket  : Socket, message : MessageDto) {

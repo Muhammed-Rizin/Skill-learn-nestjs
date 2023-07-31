@@ -11,6 +11,7 @@ dotenv.config()
 import { User } from './user.model';
 import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
 import { Professional } from 'src/professional/professional.model';
+import { VerificationService } from 'src/mail/verification/verification.service';
 
 @Injectable()
 export class UserService {
@@ -18,7 +19,8 @@ export class UserService {
         @InjectModel('User') private readonly userModel : Model<User>,
         @InjectModel('Professional') private readonly professionalModel : Model<Professional>,
         private readonly jwt : JwtService,
-        private forgetPassword : ForgetpasswordService
+        private forgetPassword : ForgetpasswordService,
+        private verification : VerificationService
     ){}
 
     // User login 
@@ -72,7 +74,12 @@ export class UserService {
                 firstName: firstName,
                 lastName: lastName,
                 education: education,
+                location: ' ',
+                bio : ' ',
+                address : ' ',
+                image : ' '
             })
+
             const result = await userData.save()
             const {_id } = result.toJSON()
 
@@ -107,7 +114,7 @@ export class UserService {
             }
             
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -117,7 +124,7 @@ export class UserService {
             const userData =  await this.userModel.findOne({token : token})
             return res.status(200).json(userData)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -133,7 +140,26 @@ export class UserService {
             const data = await this.userModel.findOneAndUpdate({_id : userData._id},{$set : {token : jwttoken}})
             return res.status(200).json(data)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async sendVerifyEmail(userid : string, @Res() res : Response) {
+        try {
+            const userData = await this.userModel.findById(userid)
+            if(!userData){
+                return res.status(404).json({message : 'Email not registered'})
+            }
+            const token = randomstring.generate(30)
+
+            const sendMail = await this.verification.userVerifyEmail(userData.firstName, userData.email, token)
+            if(sendMail){
+                await this.userModel.findByIdAndUpdate(userData._id, {emailToken : token})
+                return res.status(200).json({message : 'Check your email'})
+            }
+        } catch (error) {
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -143,7 +169,7 @@ export class UserService {
             const data = await this.userModel.findById(id)
             return res.status(200).json( data.blocked)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -153,7 +179,7 @@ export class UserService {
             const userData = await this.userModel.findById(id)
             return res.status(200).json(userData)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -161,10 +187,36 @@ export class UserService {
     async userDataByEmail(email : string, @Res() res : Response) {
         try {
             const userData = await this.professionalModel.findOne({email : email})
+            if(userData){
+                return res.status(200).json(userData)
+            }
+            return res.status(404).json({message : 'Not valid'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async updateUser(userid : string, userData : User, @Res() res : Response) {
+        try {
+            await this.userModel.findByIdAndUpdate(userData._id, {$set : userData})
             return res.status(200).json(userData)
         } catch (error) {
-            console.log(error)
-        res.status(500).json({status: 'error', message: 'internal server error'})
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async verifyEmail(id : string, token : string, @Res() res : Response) {
+        try {
+            const verified = await this.userModel.findOne({_id : id, emailToken : token})
+            if(verified){
+                const d = await this.userModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
+                return res.status(200).json({message : 'success'})
+            }
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
 }

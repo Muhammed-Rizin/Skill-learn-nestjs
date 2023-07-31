@@ -45,13 +45,16 @@ export const userSchema = new mongoose.Schema({
         default: false
     },
     emailVerified: {
-        type: Boolean
+        type: Boolean,
+        default : false
     },
     token: {
         type: String
+    },
+    emailToken: {
+        type: String
     }
 })
-
 
 export interface User {
     _id?: string
@@ -70,4 +73,5 @@ export interface User {
     address ?: string
     image ?: string
     emailverified ?: boolean
+    emailToken?: string
 }

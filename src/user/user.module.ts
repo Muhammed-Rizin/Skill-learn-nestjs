@@ -9,6 +9,7 @@ import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.se
 import { professionalSchema } from 'src/professional/professional.model';
 import { ChatService } from 'src/chat/chat.service';
 import { ChatModule } from 'src/chat/chat.module';
+import { VerificationService } from 'src/mail/verification/verification.service';
 
 @Module({
   imports : [
@@ -23,6 +24,6 @@ import { ChatModule } from 'src/chat/chat.module';
     ChatModule
   ],
   controllers: [UserController],
-  providers: [UserService, ForgetpasswordService, ChatService]
+  providers: [UserService, ForgetpasswordService, ChatService, VerificationService]
 })
 export class UserModule {}

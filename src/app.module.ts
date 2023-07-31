@@ -17,6 +17,7 @@ import { excluded } from './auth/exclude.auth';
 import { ChatGateway } from './chat/chat.gateway';
 import { ChatService } from './chat/chat.service';
 import { ChatModule } from './chat/chat.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ChatModule } from './chat/chat.module';
     }),
     AuthModule,
     ChatModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService, ForgetpasswordService, VerificationService, ChatGateway, ChatService],

@@ -44,18 +44,17 @@ export class ChatService {
                 .populate('messages.sender').populate('messages.recever')
             res.status(200).json(chatDetails)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             return res.status(500).json({ message: 'internal server error' })
         }
     }
 
     async getChatHistory(roomId: string, @Res() res: Response) {
         try {
-            console.log(roomId)
             const chatData = await this.messageModel.findOne({ roomId: roomId }).populate('messages.sender').populate('messages.recever')
             return res.status(200).json(chatData)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             return res.status(500).json({ message: 'internal server error' })
         }
     }

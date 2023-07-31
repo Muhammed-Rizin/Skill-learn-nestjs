@@ -17,7 +17,7 @@ export class ForgetpasswordService {
         });
     }
 
-    forgetPassword(userName : string, email : string, token) {
+    forgetPassword(userName : string, email : string, token : string) {
         const mailOptions = {
             from: 'Skill learn <onboarding@resend.dev>',
             to: [email],
@@ -122,7 +122,7 @@ export class ForgetpasswordService {
         return this.transporter.sendMail(mailOptions);
     }
 
-    professionalForgetPassword(userName : string, email : string, token) {
+    professionalForgetPassword(userName : string, email : string, token : string) {
         const mailOptions = {
             from: 'Skill learn <onboarding@resend.dev>',
             to: [email],

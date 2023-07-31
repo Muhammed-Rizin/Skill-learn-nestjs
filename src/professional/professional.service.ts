@@ -8,13 +8,15 @@ import * as randomstring from 'randomstring'
 
 import { Professional } from './professional.model';
 import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
+import { VerificationService } from 'src/mail/verification/verification.service';
 
 @Injectable()
 export class ProfessionalService {
     constructor(
         @InjectModel('Professional') private readonly professionalModel : Model<Professional>,
         private readonly jwt : JwtService,
-        private forgetPassword : ForgetpasswordService
+        private forgetPassword : ForgetpasswordService,
+        private verification : VerificationService
     ){}
     async professionalLogin(email : string, password : string, @Res() res : Response){
         try {
@@ -63,6 +65,17 @@ export class ProfessionalService {
                 firstName: firstName,
                 lastName: lastName,
                 education: education,
+                location: ' ',
+                qualification: ' ',
+                bio: ' ',
+                address: ' ',
+                image: ' ',
+                experience: ' ',
+                payment: ' ',
+                skill: ' ',
+                field: ' ',
+                work: ' ',
+                about: ' '
             })
             const result = await professionalData.save()
             const {_id } = result.toJSON()
@@ -96,7 +109,7 @@ export class ProfessionalService {
             }
             
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -105,7 +118,7 @@ export class ProfessionalService {
             const professionalData =  await this.professionalModel.findOne({token : token})
             return res.status(200).json(professionalData)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -120,7 +133,7 @@ export class ProfessionalService {
             const data = await this.professionalModel.findOneAndUpdate({_id : professionalData._id},{$set : {token : jwttoken}})
             return res.status(200).json(data)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -129,7 +142,7 @@ export class ProfessionalService {
             const data = await this.professionalModel.findById(id)
             return res.status(200).json( data.blocked)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
@@ -139,7 +152,60 @@ export class ProfessionalService {
             const data = await this.professionalModel.findById(id)
             return res.status(200).json( data.approved)
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async getProfessionalData(userid : string, @Res() res : Response) {
+        try {
+            const data = await this.professionalModel.findById(userid)
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async updateProfessionalData(data : Professional, @Res() res : Response) {
+        try {
+            const userData = await this.professionalModel.findByIdAndUpdate(data._id, {$set : data})
+            console.log(userData, data._id)
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async verifyEmail(id : string, token : string, @Res() res : Response) {
+        try {
+            const verified = await this.professionalModel.findOne({_id : id, emailToken : token})
+            if(verified){
+                const d = await this.professionalModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
+                return res.status(200).json({message : 'success'})
+            }
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async sendVerifyEmail(userid : string, @Res() res : Response) {
+        try {
+            const userData = await this.professionalModel.findById(userid)
+            if(!userData){
+                return res.status(404).json({message : 'Email not registered'})
+            }
+            const token = randomstring.generate(30)
+
+            const sendMail = await this.verification.professionalVerifyEmail(userData.firstName, userData.email, token)
+            if(sendMail){
+                await this.professionalModel.findByIdAndUpdate(userData._id, {emailToken : token})
+                return res.status(200).json({message : 'Check your email'})
+            }
+        } catch (error) {
+            console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
