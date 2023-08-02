@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from "@nestjs/mongoose";
+import { MulterModule } from '@nestjs/platform-express';
 
 import { ProfessionalController } from './professional.controller';
 import { ProfessionalService } from './professional.service';
@@ -10,6 +11,7 @@ import { ChatService } from 'src/chat/chat.service';
 import { userSchema } from 'src/user/user.model';
 import { ChatModule } from 'src/chat/chat.module';
 import { VerificationService } from 'src/mail/verification/verification.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [
@@ -21,9 +23,12 @@ import { VerificationService } from 'src/mail/verification/verification.service'
       secret: process.env.secret,
       signOptions: { expiresIn: '30d' },
     }),
+    MulterModule.register({
+      dest: '../public',
+    }),
     ChatModule
   ],
   controllers: [ProfessionalController],
-  providers: [ProfessionalService, ForgetpasswordService, ChatService, VerificationService]
+  providers: [ProfessionalService, ForgetpasswordService, ChatService, VerificationService, AuthService]
 })
 export class ProfessionalModule {}

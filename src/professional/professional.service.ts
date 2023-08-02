@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import * as path from 'path';
 import * as randomstring from 'randomstring'
 
 import { Professional } from './professional.model';
@@ -170,7 +171,6 @@ export class ProfessionalService {
     async updateProfessionalData(data : Professional, @Res() res : Response) {
         try {
             const userData = await this.professionalModel.findByIdAndUpdate(data._id, {$set : data})
-            console.log(userData, data._id)
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -182,8 +182,10 @@ export class ProfessionalService {
         try {
             const verified = await this.professionalModel.findOne({_id : id, emailToken : token})
             if(verified){
-                const d = await this.professionalModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
+                await this.professionalModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
                 return res.status(200).json({message : 'success'})
+            }else {
+                return res.status(404).json({message : 'inavlid token'})
             }
         } catch (error) {
             console.log(error.message)
@@ -207,6 +209,25 @@ export class ProfessionalService {
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async submitImage(userid : string, imageName : string, @Res() res : Response){
+        try {
+            await this.professionalModel.findByIdAndUpdate(userid, { $set : {image : imageName}})
+            return res.status(200).json({message : 'success'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+    async sendFile(name : string, @Res() res : Response) {
+        try {
+            const filePath = path.resolve('./profile-images', name);
+            return res.status(200).sendFile(filePath)
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'}) 
         }
     }
 }

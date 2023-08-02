@@ -12,6 +12,7 @@ import { User } from './user.model';
 import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
 import { Professional } from 'src/professional/professional.model';
 import { VerificationService } from 'src/mail/verification/verification.service';
+import * as path from 'path';
 
 @Injectable()
 export class UserService {
@@ -217,6 +218,35 @@ export class UserService {
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+    async getProfessionals(@Res() res : Response) {
+        try {
+            const data = await this.professionalModel.find({approved : true})
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async submitImage(userid : string, imageName : string, @Res() res : Response){
+        try {
+            await this.userModel.findByIdAndUpdate(userid, { $set : {image : imageName}})
+            return res.status(200).json({message : 'success'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+    async sendFile(name : string, @Res() res : Response) {
+        try {
+            const filePath = path.resolve('./profile-images', name);
+            console.log(filePath)
+            return res.status(200).sendFile(filePath)
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'}) 
         }
     }
 }

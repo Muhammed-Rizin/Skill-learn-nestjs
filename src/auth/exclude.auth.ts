@@ -10,4 +10,5 @@ export const excluded = [
     '/professional/forgetpassword/professional_details',
     '/professional/newpassword',
     '/admin/login',
+    '/user/professionalsdata'
 ] 

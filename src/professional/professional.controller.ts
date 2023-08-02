@@ -1,15 +1,19 @@
-import { Controller, Post, Body, Res, Query, Get, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Res, Query, Get, Patch, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { Response } from 'express';
 
 import { ProfessionalService } from './professional.service';
 import { Professional } from './professional.model';
 import { ChatService } from 'src/chat/chat.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('professional')
 export class ProfessionalController {
     constructor(
         private readonly professionalService : ProfessionalService, 
-        private readonly chatService : ChatService
+        private readonly chatService : ChatService,
+        private readonly _authService : AuthService
     ){}
 
     // POST /professional/login
@@ -138,5 +142,44 @@ export class ProfessionalController {
         }
     }
 
+    @Post('uploadimage')
+    @UseInterceptors(
+        FileInterceptor('profile', {
+            storage : diskStorage({ 
+                destination : './profile-images',
+                filename : (req, file, cb) => {
+                    const name = file.originalname.split(".")[0]
+                    const fileExtantion = file.originalname.split(".")[1]
+                    const newName = name.split(" ").join("_") + "_" + Date.now() + "." + fileExtantion
+                    cb(null, newName)
+                }
+            }),
+            fileFilter : (req, file, cb) => {
+                if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
+                    return cb(null, false)
+                }
+                cb(null, true)
+            }
+        })
+    )
+    async uploadFile(
+        @Query('id') id : string, 
+        @Res() res : Response,
+        @UploadedFile() file : Express.Multer.File
+    ) {
+        try {
+            return this.professionalService.submitImage(id, file.filename, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
     
+    @Get('file')
+    async getFile(@Query('name') name : string,@Res() res : Response) {
+        try {
+            return this.professionalService.sendFile(name, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
 }

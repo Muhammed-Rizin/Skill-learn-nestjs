@@ -10,6 +10,7 @@ import { professionalSchema } from 'src/professional/professional.model';
 import { ChatService } from 'src/chat/chat.service';
 import { ChatModule } from 'src/chat/chat.module';
 import { VerificationService } from 'src/mail/verification/verification.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports : [
@@ -20,6 +21,9 @@ import { VerificationService } from 'src/mail/verification/verification.service'
     JwtModule.register({
       secret: process.env.secret,
       signOptions: { expiresIn: '30d' },
+    }),
+    MulterModule.register({
+      dest: '../file',
     }),
     ChatModule
   ],
