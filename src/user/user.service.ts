@@ -13,6 +13,7 @@ import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.se
 import { Professional } from 'src/professional/professional.model';
 import { VerificationService } from 'src/mail/verification/verification.service';
 import * as path from 'path';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,8 @@ export class UserService {
         @InjectModel('Professional') private readonly professionalModel : Model<Professional>,
         private readonly jwt : JwtService,
         private forgetPassword : ForgetpasswordService,
-        private verification : VerificationService
+        private verification : VerificationService,
+        private readonly _cloudinaryService : CloudinaryService
     ){}
 
     // User login 
@@ -230,23 +232,15 @@ export class UserService {
         }
     }
 
-    async submitImage(userid : string, imageName : string, @Res() res : Response){
+    async submitImage(userid : string, file : Express.Multer.File, @Res() res : Response){
         try {
-            await this.userModel.findByIdAndUpdate(userid, { $set : {image : imageName}})
+            const imageUrl = await this._cloudinaryService.uploadImage(file.path)
+            await this.userModel.findByIdAndUpdate(userid, { $set : {image : imageUrl}})
             return res.status(200).json({message : 'success'})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
-    async sendFile(name : string, @Res() res : Response) {
-        try {
-            const filePath = path.resolve('./profile-images', name);
-            console.log(filePath)
-            return res.status(200).sendFile(filePath)
-        } catch (error) {
-            console.log(error.message)
-            res.status(500).json({status: 'error', message: 'internal server error'}) 
-        }
-    }
+    
 }

@@ -18,6 +18,10 @@ import { ChatGateway } from './chat/chat.gateway';
 import { ChatService } from './chat/chat.service';
 import { ChatModule } from './chat/chat.module';
 import { PaymentModule } from './payment/payment.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { TaskModule } from './task/task.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -30,9 +34,14 @@ import { PaymentModule } from './payment/payment.module';
       secret: process.env.secret,
       signOptions: { expiresIn: '3d' },
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'profile-images'),
+    }),
     AuthModule,
     ChatModule,
     PaymentModule,
+    TaskModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService, ForgetpasswordService, VerificationService, ChatGateway, ChatService],

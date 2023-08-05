@@ -7,12 +7,17 @@ import { UserService } from './user.service';
 import { User } from './user.model';
 import { ChatService } from 'src/chat/chat.service';
 import { diskStorage } from 'multer';
+import { TaskService } from 'src/task/task.service';
+import { Task } from 'src/task/dto/task.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Controller('user')
 export class UserController {
     constructor(
         private readonly userService: UserService,
-        private readonly chatService: ChatService
+        private readonly chatService: ChatService,
+        private readonly _taskService: TaskService,
+
     ) { }
 
     // POST /user/login
@@ -175,43 +180,56 @@ export class UserController {
         }
     }
 
+    // POST /professional/uploadimage
     @Post('uploadimage')
-    @UseInterceptors(
-        FileInterceptor('profile', {
-            storage : diskStorage({ 
-                destination : './profile-images',
-                filename : (req, file, cb) => {
-                    const name = file.originalname.split(".")[0]
-                    const fileExtantion = file.originalname.split(".")[1]
-                    const newName = name.split(" ").join("_") + "_" + Date.now() + "." + fileExtantion
-                    cb(null, newName)
-                }
-            }),
-            fileFilter : (req, file, cb) => {
-                if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
-                    return cb(null, false)
-                }
-                cb(null, true)
-            }
-        })
-    )
+    @UseInterceptors(FileInterceptor('image'))
     async uploadFile(
         @Query('id') id : string, 
         @Res() res : Response,
-        @UploadedFile() file : Express.Multer.File
+        @UploadedFile() file: Express.Multer.File
     ) {
         try {
-            return this.userService.submitImage(id, file.filename, res)
+            return this.userService.submitImage(id, file, res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
-    
-    @Get('file')
-    async getFile(@Query('name') name : string,@Res() res : Response) {
+
+    // GET /user/inprogresstask
+    @Get('inprogresstask')
+    async inprogressTask(
+        @Body('userid') id: string,
+        @Res() res: Response
+    ) {
         try {
-            console.log(name)
-            return this.userService.sendFile(name, res)
+            return await this._taskService.getInprogressTaskOfUser(id, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
+    
+    // GET /user/completedtask
+    @Get('completedtask')
+    async completedTask(
+        @Body('userid') id: string,
+        @Res() res: Response
+    ) {
+        try {
+            return await this._taskService.getCompletedTasksByUser(id, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
+
+    // PATCH /user/taskdone
+    @Patch('taskdone')
+    async doneTask(
+        @Body('userid') id : string,
+        @Body('taskid') taskId : string,
+        @Res() res :Response 
+    ){
+        try {
+            return await this._taskService.taskDone(taskId, res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }

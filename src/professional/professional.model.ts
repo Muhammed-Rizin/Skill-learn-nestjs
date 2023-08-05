@@ -96,7 +96,6 @@ export interface Professional {
     __v?: number
     token?: string
     location ?: string
-    birthday ?: Date
     bio ?: string
     address ?: string
     image ?: string
