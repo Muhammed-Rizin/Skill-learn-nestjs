@@ -1,24 +1,24 @@
 import { Injectable, Res } from '@nestjs/common';
-import { Response } from 'express';
-
-import { CompleteTask, Task } from './dto/task.dto';
 import { Model } from 'mongoose';
+import { Response } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 
+import { CompleteSchedule, Schedule } from './dto/schedule.dto';
+
 @Injectable()
-export class TaskService {
+export class ScheduleService {
     constructor(
-        @InjectModel('Task') private readonly _taskModel : Model<CompleteTask>
+        @InjectModel('Schedule') private readonly _scheduleSchema : Model<CompleteSchedule>
     ){}
 
-    async addTask(task : Task, id : string, @Res() res : Response) {
+    async scheduleMeeting(meeting : Schedule, id : string, @Res() res : Response) {
         try {
-            const data = new this._taskModel ({
+            const data = new this._scheduleSchema ({
                 from : id,
-                to : task.user,
-                task : task.task,
-                description : task.description,
-                endtime : task.endtime
+                to : meeting.user,
+                topic : meeting.topic,
+                description : meeting.description,
+                time : meeting.time
             })
             await data.save()
             return res.status(200).json({message : 'success'})
@@ -28,10 +28,10 @@ export class TaskService {
         }
     }
 
-    async getInprogressTasks(id : string, @Res() res : Response) {
+    async getInprogress(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to')
+            const data = await this._scheduleSchema.find({from : id, time :{$gte : now}}).populate('to')
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -39,10 +39,10 @@ export class TaskService {
         }
     }
 
-    async getCompletedTasks(id : string, @Res() res : Response) {
+    async getCompleted(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to')
+            const data = await this._scheduleSchema.find({from : id, time :{$lte : now}}).populate('to')
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -50,31 +50,20 @@ export class TaskService {
         }
     }
 
-    async getInprogressTaskOfUser(id : string, @Res() res : Response) {
+    async getInprogressOfUser(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from')
+            const data = await this._scheduleSchema.find({to : id, time :{$gte : now}}).populate('from')
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'}) 
         }
     }
-
-    async getCompletedTasksOfUser(id : string, @Res() res : Response) {
+    async getCompletedOfUser(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from')
-            return res.status(200).json(data)
-        } catch (error) {
-            console.log(error.message)
-            res.status(500).json({status: 'error', message: 'internal server error'}) 
-        }
-    }
-
-    async taskDone(id : string, @Res() res : Response) {
-        try {
-            const data = await this._taskModel.findByIdAndUpdate(id, {$set : {completed : true}})
+            const data = await this._scheduleSchema.find({to : id, time :{$lte : now}}).populate('from')
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -82,5 +71,3 @@ export class TaskService {
         }
     }
 }
-
-

@@ -9,6 +9,7 @@ import { taskSchema } from './schema/task.model';
       {name: 'Task', schema: taskSchema}
     ])
   ],
-  providers: [TaskService]
+  providers: [TaskService],
+  exports:[MongooseModule, TaskService]
 })
 export class TaskModule {}

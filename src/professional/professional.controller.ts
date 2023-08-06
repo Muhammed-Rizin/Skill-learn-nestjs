@@ -10,6 +10,8 @@ import { AuthService } from 'src/auth/auth.service';
 import { TaskService } from 'src/task/task.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { Task } from 'src/task/dto/task.dto';
+import { ScheduleService } from 'src/schedule/schedule.service';
+import { Schedule } from 'src/schedule/dto/schedule.dto';
 
 @Controller('professional')
 export class ProfessionalController {
@@ -18,6 +20,7 @@ export class ProfessionalController {
         private readonly chatService: ChatService,
         private readonly _paymentService: PaymentService,
         private readonly _taskService: TaskService,
+        private readonly _scheduleService : ScheduleService
     ) { }
 
     // POST /professional/login
@@ -209,6 +212,46 @@ export class ProfessionalController {
     ) {
         try {
             return await this._taskService.getCompletedTasks(id, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
+
+    // POST /professional/schedule
+    @Post('schedule')
+    async scheduleMeeting(
+        @Body('userid') id : string,
+        @Body('schedule') meeting: Schedule,
+        @Res() res : Response
+    ){
+        try {
+            return await this._scheduleService.scheduleMeeting(meeting, id,res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
+
+    // GET /professional/inprogressmeeting
+    @Get('inprogressmeeting')
+    async inProgressMeeting(
+        @Body('userid') id : string,
+        @Res() res : Response
+    ){
+        try {
+            return await this._scheduleService.getInprogress(id, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
+
+    // GET /professional/completedmeeting
+    @Get('completedmeeting')
+    async completedMeeting(
+        @Body('userid') id : string,
+        @Res() res : Response
+    ){
+        try {
+            return await this._scheduleService.getCompleted(id, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }

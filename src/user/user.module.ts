@@ -16,6 +16,7 @@ import { taskSchema } from 'src/task/schema/task.model';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { ConfigService } from '@nestjs/config';
+import { ScheduleModule } from 'src/schedule/schedule.module';
 
 @Module({
   imports : [
@@ -28,11 +29,9 @@ import { ConfigService } from '@nestjs/config';
       secret: process.env.secret,
       signOptions: { expiresIn: '30d' },
     }),
-    MulterModule.register({
-      dest: '../file',
-    }),
     ChatModule,
-    CloudinaryModule
+    CloudinaryModule,
+    ScheduleModule
   ],
   controllers: [UserController],
   providers: [UserService, ForgetpasswordService, ChatService, VerificationService, TaskService, CloudinaryService, ConfigService]

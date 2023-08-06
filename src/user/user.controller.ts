@@ -10,6 +10,7 @@ import { diskStorage } from 'multer';
 import { TaskService } from 'src/task/task.service';
 import { Task } from 'src/task/dto/task.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { ScheduleService } from 'src/schedule/schedule.service';
 
 @Controller('user')
 export class UserController {
@@ -17,6 +18,7 @@ export class UserController {
         private readonly userService: UserService,
         private readonly chatService: ChatService,
         private readonly _taskService: TaskService,
+        private readonly _scheduledService : ScheduleService
 
     ) { }
 
@@ -215,7 +217,7 @@ export class UserController {
         @Res() res: Response
     ) {
         try {
-            return await this._taskService.getCompletedTasksByUser(id, res)
+            return await this._taskService.getCompletedTasksOfUser(id, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }
@@ -230,6 +232,32 @@ export class UserController {
     ){
         try {
             return await this._taskService.taskDone(taskId, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    // GET /user/inprogressmeeting
+    @Get('inprogressmeeting')
+    async inProgressMeeting(
+        @Body('userid') id: string,
+        @Res() res: Response
+    ){
+        try {
+            return this._scheduledService.getInprogressOfUser(id,res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+    
+    // GET /user/completedmeeting
+    @Get('completedmeeting')
+    async completedMeeting(
+        @Body('userid') id: string,
+        @Res() res: Response
+    ){
+        try {
+            return this._scheduledService.getCompletedOfUser(id,res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
