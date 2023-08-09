@@ -5,10 +5,14 @@ import { Response } from 'express';
 
 import { Message } from './schema/chat.model';
 import { MessageDto } from './dto/chat.dto';
+import { Video } from './dto/video.dto';
 
 @Injectable()
 export class ChatService {
-    constructor(@InjectModel('Message') private readonly messageModel: Model<Message>) { }
+    constructor(
+        @InjectModel('Message') private readonly messageModel: Model<Message>,
+        @InjectModel('Call') private readonly callModel: Model<Video>,
+        ) { }
 
     async saveMessage(messageDto: MessageDto): Promise<Message> {
         const { roomName, message, from, to, type, receverType } = messageDto;
@@ -56,6 +60,23 @@ export class ChatService {
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({ message: 'internal server error' })
+        }
+    }
+
+    async addCall(room : string, from : string, to : string) {
+        try {
+            const call = new this.callModel({
+                room : room,
+                from : from,
+                to : to,
+                status : 'incoming'
+            })
+
+            const result = await call.save()
+            return result
+    
+        } catch (error) {
+            console.log(error.message)
         }
     }
 }

@@ -31,7 +31,7 @@ export class TaskService {
     async getInprogressTasks(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to')
+            const data = await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to').sort({endtime : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -42,7 +42,7 @@ export class TaskService {
     async getCompletedTasks(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to')
+            const data = await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to').sort({endtime : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -53,7 +53,7 @@ export class TaskService {
     async getInprogressTaskOfUser(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from')
+            const data = await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from').sort({endtime : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -64,7 +64,7 @@ export class TaskService {
     async getCompletedTasksOfUser(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from')
+            const data = await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from').sort({endtime : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -74,7 +74,8 @@ export class TaskService {
 
     async taskDone(id : string, @Res() res : Response) {
         try {
-            const data = await this._taskModel.findByIdAndUpdate(id, {$set : {completed : true}})
+            const data = await this._taskModel.findByIdAndUpdate(id, {$set : {completed : true}}).sort({endtime : 1})
+            console.log(data)
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)

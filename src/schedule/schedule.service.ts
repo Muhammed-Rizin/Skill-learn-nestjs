@@ -31,7 +31,7 @@ export class ScheduleService {
     async getInprogress(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._scheduleSchema.find({from : id, time :{$gte : now}}).populate('to')
+            const data = await this._scheduleSchema.find({from : id, time :{$gte : now}}).populate('to').sort({time : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -42,7 +42,7 @@ export class ScheduleService {
     async getCompleted(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._scheduleSchema.find({from : id, time :{$lte : now}}).populate('to')
+            const data = await this._scheduleSchema.find({from : id, time :{$lte : now}}).populate('to').sort({time : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -53,7 +53,7 @@ export class ScheduleService {
     async getInprogressOfUser(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._scheduleSchema.find({to : id, time :{$gte : now}}).populate('from')
+            const data = await this._scheduleSchema.find({to : id, time :{$gte : now}}).populate('from').sort({time : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -63,7 +63,7 @@ export class ScheduleService {
     async getCompletedOfUser(id : string, @Res() res : Response) {
         try {
             const now = new Date()
-            const data = await this._scheduleSchema.find({to : id, time :{$lte : now}}).populate('from')
+            const data = await this._scheduleSchema.find({to : id, time :{$lte : now}}).populate('from').sort({time : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)

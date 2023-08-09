@@ -18,13 +18,14 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('join')
   handleJoinEvent(socket: Socket, roomName: string) {
     socket.join(roomName)
+    socket.broadcast.to(roomName).emit('member-joined')
   }
   @SubscribeMessage('message')
   async handleMessage(socket  : Socket, message : MessageDto) {
     try {
       const newMessage = await this.chatService.saveMessage(message);
       const messageData = await this.chatService.findMessageByRoomId(message.roomName);
-      
+
       this.server.to(message.roomName).emit('message', {
         sender: message.from,
         text: message.message,
@@ -35,4 +36,21 @@ export class ChatGateway implements OnGatewayConnection {
       console.log(error.message);
     }
   }
+
+  @SubscribeMessage('new-call')
+  async newCall(socket : Socket, {room, to, from}: {room :string, to : string, from : string}) {
+    await this.chatService.addCall(room, to, from)
+  }
+
+  @SubscribeMessage('disconnect-user')
+  async handledisconnectUser(socket : Socket, roomId : string) {
+    this.server.to(roomId).emit('user-disconnected', roomId)
+    socket.leave(roomId)
+  }
+
+  @SubscribeMessage('send-message')
+  async handleVideoMessages(socket : Socket, {message, roomId} : {message : any, roomId : any}){
+    socket.broadcast.to(roomId).emit('receive-message', message)
+  }
+
 }
