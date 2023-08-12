@@ -21,6 +21,7 @@ import { PaymentModule } from './payment/payment.module';
 import { TaskModule } from './task/task.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ScheduleModule } from './schedule/schedule.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ScheduleModule } from './schedule/schedule.module';
     TaskModule,
     CloudinaryModule,
     ScheduleModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService, ForgetpasswordService, VerificationService, ChatGateway, ChatService],

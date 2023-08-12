@@ -75,7 +75,6 @@ export class TaskService {
     async taskDone(id : string, @Res() res : Response) {
         try {
             const data = await this._taskModel.findByIdAndUpdate(id, {$set : {completed : true}}).sort({endtime : 1})
-            console.log(data)
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)

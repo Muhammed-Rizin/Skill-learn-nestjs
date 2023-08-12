@@ -30,7 +30,7 @@ export class PaymentService {
         try {
             const fromUser = new mongoose.Types.ObjectId(from)
             const toUser = new mongoose.Types.ObjectId(to)
-            const data = await this.paymentModel.find({from : fromUser})
+            const data = await this.paymentModel.find({from : fromUser, to : toUser})
 
             return res.status(200).json(data[data.length - 1])
         } catch (error) {
@@ -47,6 +47,26 @@ export class PaymentService {
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({message : 'internal server error'})
+        }
+    }
+
+    async getUserHistory(id : string, @Res() res : Response) {
+        try {
+            const data = await this.paymentModel.find({from : id}).populate('to').sort({createdAt : 1})
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({message : 'Internal server error'})
+        }
+    }
+
+    async getProfessionalHistory(id : string, @Res() res : Response) {
+        try {
+            const data = await this.paymentModel.find({to : id}).populate('from').sort({createdAt : 1})
+            return res.status(200).json(data)
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({message : 'Internal server error'})
         }
     }
 }

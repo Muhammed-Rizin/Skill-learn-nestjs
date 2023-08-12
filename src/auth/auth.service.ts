@@ -25,7 +25,6 @@ export class AuthService  implements NestMiddleware {
             const decoded = this.jwtService.verify(token);
             
             req.body.userid = decoded._id
-            
         } catch (error) {
             return res.status(401).json({ message: 'Unauthorized' });
         }

@@ -7,6 +7,8 @@ import * as mongoose from 'mongoose';
 @Controller('payment')
 export class PaymentController {
     constructor( private paymentService : PaymentService){}
+
+    // GET /payment/conform
     @Post('conform') 
     async conformPayment (@Body('data') data : Payment, @Res() res : Response) {
         try {
@@ -16,6 +18,7 @@ export class PaymentController {
         }
     }
 
+    //
     @Get('subscribed')
     async subscribed (
         @Query('from') from : string,
@@ -26,6 +29,32 @@ export class PaymentController {
             return await this.paymentService.subscribed(from, to, res)
         } catch (error) {
             return res.status(500).json({message : 'internal server error'})
+        }
+    }
+
+    // GET payment/userhistory
+    @Get('userhistory')
+    async userHistory(
+        @Body('userid') id : string,
+        @Res() res : Response
+    ){
+        try {
+            return await this.paymentService.getUserHistory(id,res)
+        } catch (error) {
+            return res.status(500).json({message : 'Internal server error'})
+        }
+    }
+
+    // GET payment/professionalhistory
+    @Get('professionalhistory')
+    async professionalHistory(
+        @Body('userid') id : string,
+        @Res() res : Response
+    ){
+        try {
+            return await this.paymentService.getProfessionalHistory(id,res)
+        } catch (error) {
+            return res.status(500).json({message : 'Internal server error'})
         }
     }
 }
