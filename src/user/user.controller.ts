@@ -262,4 +262,18 @@ export class UserController {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
+
+    // @PATCH /user/setnotification
+    @Patch('setnotification')
+    async setNotification(
+        @Body('token') token : string,
+        @Body('userid') id : string,
+        @Res() res :Response
+    ){
+        try {
+            this.userService.setNotification(id, token, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
 }

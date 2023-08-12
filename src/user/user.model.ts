@@ -53,6 +53,9 @@ export const userSchema = new mongoose.Schema({
     },
     emailToken: {
         type: String
+    },
+    notificationToken : {
+        type : String
     }
 })
 
@@ -74,4 +77,5 @@ export interface User {
     image ?: string
     emailverified ?: boolean
     emailToken?: string
+    notificationToken?: string
 }

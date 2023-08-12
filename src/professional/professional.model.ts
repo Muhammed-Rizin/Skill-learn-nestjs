@@ -80,6 +80,9 @@ export const professionalSchema = new mongoose.Schema({
     },
     about  : {
         type : String
+    },
+    notificationToken : {
+        type : String
     }
 
 })
@@ -110,4 +113,5 @@ export interface Professional {
     qualification?: string
     emailToken?: string
     about?: string
+    notificationToken?: string
 }

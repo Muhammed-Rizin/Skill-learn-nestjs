@@ -256,5 +256,19 @@ export class ProfessionalController {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }
     }
+
+    // @PATCH /professional/setnotification
+    @Patch('setnotification')
+    async setNotification(
+        @Body('token') token : string,
+        @Body('userid') id : string,
+        @Res() res :Response
+    ){
+        try {
+            this.professionalService.setNotification(id, token, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
 }
 
