@@ -8,7 +8,7 @@ import * as express from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const corsOptions: CorsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://skilllearn.netlify.app/home'],
     credentials: true,
   };
   app.enableCors(corsOptions);
