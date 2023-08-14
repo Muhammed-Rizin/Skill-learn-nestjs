@@ -15,6 +15,8 @@ export const MessageSchema = new mongoose.Schema({
   ],
   users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   roomId: { type: String, required: true },
+  userRead : {type : Boolean, default: false},
+  professionalRead : {type : Boolean, default: false}
 });
 
 
@@ -29,4 +31,6 @@ export interface Message extends Document {
   }>;
   users: mongoose.Schema.Types.ObjectId[];
   roomId: string;
+  userRead: boolean
+  professionalRead: boolean
 }

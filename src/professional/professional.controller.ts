@@ -274,5 +274,15 @@ export class ProfessionalController {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
+
+    //  PATCH /professional/messageseen
+    @Patch('messageseen')
+    async setReadStatus(@Query('roomid') roomId : string, @Res() res : Response){
+        try {
+            return this.chatService.updateStatusProfessional(roomId, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
 }
 

@@ -284,4 +284,14 @@ export class UserController {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
+
+    //  PATCH /user/messageseen
+    @Patch('messageseen')
+    async setReadStatus(@Query('roomid') roomId : string, @Res() res : Response){
+        try {
+            return this.chatService.updateStatusUser(roomId, res)
+        } catch (error) {
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
 }

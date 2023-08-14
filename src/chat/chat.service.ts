@@ -16,7 +16,7 @@ export class ChatService {
 
     async saveMessage(messageDto: MessageDto): Promise<Message> {
         const { roomName, message, from, to, type, receverType } = messageDto;
-        return this.messageModel.findOneAndUpdate(
+        const data = this.messageModel.findOneAndUpdate(
             { roomId: roomName },
             {
                 $push: {
@@ -30,9 +30,17 @@ export class ChatService {
                     },
                 },
                 $addToSet: { users: [from, to] },
+                
             },
             { upsert: true, new: true },
         );
+
+        if(type === "User"){
+            this.updateProfessionalStatusAsUnreed(roomName)
+        }else {
+            this.updateUserStatusAsUnreed(roomName)
+        }
+        return data
     }
 
     async findMessageByRoomId(roomName: string): Promise<Message> {
@@ -40,7 +48,43 @@ export class ChatService {
           .findOne({ roomId: roomName })
           .populate('messages.sender')
           .populate('messages.recever');
-      }
+    }
+
+
+    async updateUserStatusAsUnreed(roomId: string) {
+        try{
+            await this.messageModel.findOneAndUpdate({roomId : roomId}, {$set : {userRead : false}})
+        }catch(error){
+            console.log(error.message)
+        }
+    } 
+    async updateProfessionalStatusAsUnreed(roomId: string) {
+        try{
+            await this.messageModel.findOneAndUpdate({roomId : roomId}, {$set : {professionalRead : false}})
+        }catch(error){
+            console.log(error.message)
+        }
+    } 
+
+    async updateStatusUser(roomId : string,@Res() res : Response){
+        try {
+            await this.messageModel.findOneAndUpdate({roomId : roomId}, {$set : {userRead : true}})
+            return res.status(200).json({message : 'success'})
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({ message: 'internal server error' })
+        }
+    }
+
+    async updateStatusProfessional(roomId : string,@Res() res : Response){
+        try {
+            await this.messageModel.findOneAndUpdate({roomId : roomId}, {$set : {professionalRead : true}})
+            return res.status(200).json({message : 'success'})
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({ message: 'internal server error' })
+        }
+    }
 
     async getChats(userid: string, @Res() res: Response) {
         try {
