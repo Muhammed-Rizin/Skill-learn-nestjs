@@ -109,7 +109,7 @@ export class ForgetpasswordService {
                         <p>We received a request to reset the password for your Skill-Learn account. If you didn't initiate this request,
                             please ignore this email.</p>
                         <p class="last">To reset your password, click the button above:</p>
-                        <a href="http://localhost:3000/newpassword?token=${token}"><button>New Password</button></a>
+                        <a href="https://skilllearn.netlify.app/newpassword?token=${token}"><button>New Password</button></a>
                     </div>
                 </div>
             </body>
@@ -214,7 +214,7 @@ export class ForgetpasswordService {
                         <p>We received a request to reset the password for your Skill-Learn account. If you didn't initiate this request,
                             please ignore this email.</p>
                         <p class="last">To reset your password, click the button above:</p>
-                        <a href="http://localhost:3000/professional/newpassword?token=${token}"><button>New Password</button></a>
+                        <a href="https://skilllearn.netlify.app/professional/newpassword?token=${token}"><button>New Password</button></a>
                     </div>
                 </div>
             </body>
