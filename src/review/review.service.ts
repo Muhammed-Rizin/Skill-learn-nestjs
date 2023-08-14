@@ -27,10 +27,16 @@ export class ReviewService {
         }
     }
 
-    async reviews(id: string, @Res() res : Response){
+    async reviews(id: string, page : number, @Res() res : Response){
         try {
+            const limit = 2
+            const skip: number = (page - 1) * limit
+
             const data = await this._reviewModel.find({professional : id}).populate('user')
-            return res.status(200).json(data)
+            .sort({createdAt : -1}).skip(skip).limit(limit)
+
+            const total = (await this._reviewModel.find({professional : id}).populate('user')).length
+            return res.status(200).json({data, total})
         } catch (error) {
             return res.status(200).json({message : 'Internal server error'})
             

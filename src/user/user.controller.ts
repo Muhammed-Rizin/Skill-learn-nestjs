@@ -173,16 +173,20 @@ export class UserController {
         }
     }
 
+    // GET /user/professionalsdata
     @Get('professionalsdata')
-    async getProfessionals(@Res() res : Response){
+    async getProfessionals(
+        @Query('page') page : number,
+        @Res() res : Response
+    ){
         try {
-            return this.userService.getProfessionals(res)
+            return this.userService.getProfessionals(page, res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
 
-    // POST /professional/uploadimage
+    // POST /user/uploadimage
     @Post('uploadimage')
     @UseInterceptors(FileInterceptor('image'))
     async uploadFile(
@@ -200,11 +204,12 @@ export class UserController {
     // GET /user/inprogresstask
     @Get('inprogresstask')
     async inprogressTask(
+        @Query('page') page : number,
         @Body('userid') id: string,
         @Res() res: Response
     ) {
         try {
-            return await this._taskService.getInprogressTaskOfUser(id, res)
+            return await this._taskService.getInprogressTaskOfUser(id, page, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }
@@ -213,11 +218,12 @@ export class UserController {
     // GET /user/completedtask
     @Get('completedtask')
     async completedTask(
+        @Query('page') page : number,
         @Body('userid') id: string,
         @Res() res: Response
     ) {
         try {
-            return await this._taskService.getCompletedTasksOfUser(id, res)
+            return await this._taskService.getCompletedTasksOfUser(id, page, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }
@@ -240,11 +246,12 @@ export class UserController {
     // GET /user/inprogressmeeting
     @Get('inprogressmeeting')
     async inProgressMeeting(
+        @Query('page') page : number,
         @Body('userid') id: string,
         @Res() res: Response
     ){
         try {
-            return this._scheduledService.getInprogressOfUser(id,res)
+            return this._scheduledService.getInprogressOfUser(id, page,res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
@@ -253,11 +260,12 @@ export class UserController {
     // GET /user/completedmeeting
     @Get('completedmeeting')
     async completedMeeting(
+        @Query('page') page : number,
         @Body('userid') id: string,
         @Res() res: Response
     ){
         try {
-            return this._scheduledService.getCompletedOfUser(id,res)
+            return this._scheduledService.getCompletedOfUser(id, page,res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }

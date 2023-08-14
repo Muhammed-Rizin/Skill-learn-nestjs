@@ -222,10 +222,15 @@ export class UserService {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
-    async getProfessionals(@Res() res : Response) {
+    async getProfessionals(page : number, @Res() res : Response) {
         try {
-            const data = await this.professionalModel.find({approved : true})
-            return res.status(200).json(data)
+            const limit: number = 5
+            const skip: number = (page - 1) * limit
+
+            const data = await this.professionalModel.find({approved : true}).skip(skip).limit(limit)
+            const totalProfessional = (await this.professionalModel.find({approved : true})).length
+
+            return res.status(200).json({data, totalProfessional})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})

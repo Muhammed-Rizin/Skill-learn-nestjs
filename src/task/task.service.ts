@@ -28,44 +28,68 @@ export class TaskService {
         }
     }
 
-    async getInprogressTasks(id : string, @Res() res : Response) {
+    async getInprogressTasks(id : string, page :number, @Res() res : Response) {
         try {
+            const limit: number = 5
+            const skip: number = (page - 1) * limit
             const now = new Date()
-            const data = await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to').sort({endtime : 1})
-            return res.status(200).json(data)
+
+            const data = await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to')
+            .sort({endtime : 1}).skip(skip).limit(limit)
+            const total = (await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to')).length
+
+            return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'}) 
         }
     }
 
-    async getCompletedTasks(id : string, @Res() res : Response) {
+    async getCompletedTasks(id : string, page : number, @Res() res : Response) {
         try {
+            const limit: number = 5
+            const skip: number = (page - 1) * limit
             const now = new Date()
-            const data = await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to').sort({endtime : 1})
-            return res.status(200).json(data)
+
+            const data = await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to')
+            .sort({endtime : -1}).skip(skip).limit(limit)
+            const total = (await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to')).length
+            return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'}) 
         }
     }
 
-    async getInprogressTaskOfUser(id : string, @Res() res : Response) {
+    async getInprogressTaskOfUser(id : string, page : number, @Res() res : Response) {
         try {
+            const limit: number = 5
+            const skip: number = (page - 1) * limit
             const now = new Date()
-            const data = await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from').sort({endtime : 1})
-            return res.status(200).json(data)
+            
+            const data = await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from')
+            .sort({endtime : 1}).skip(skip).limit(limit)
+
+            const total = (await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from')).length
+
+            return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'}) 
         }
     }
 
-    async getCompletedTasksOfUser(id : string, @Res() res : Response) {
+    async getCompletedTasksOfUser(id : string, page : number, @Res() res : Response) {
         try {
+            const limit: number = 5
+            const skip: number = (page - 1) * limit
             const now = new Date()
-            const data = await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from').sort({endtime : 1})
-            return res.status(200).json(data)
+
+            const data = await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from')
+            .sort({endtime : -1}).skip(skip).limit(limit)
+
+            const total = (await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from')).length
+            return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'}) 

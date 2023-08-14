@@ -26,9 +26,13 @@ export class ReviewController {
 
     // GET review/getreviews
     @Get('getreviews') 
-    async getReview(@Query('id') id : string, @Res() res : Response) {
+    async getReview(
+        @Query('page') page : number,
+        @Query('id') id : string, 
+        @Res() res : Response
+    ) {
         try {
-            return this.reviewService.reviews(id,res)
+            return this.reviewService.reviews(id, page,res)
         } catch (error) {
             console.log(error.message)
             return res.status(200).json({message : 'Internal server error'})
@@ -37,9 +41,13 @@ export class ReviewController {
 
     // GET review/professionalreviews
     @Get('professionalreviews') 
-    async getProfessionalReview(@Query('id') id : string, @Res() res : Response) {
+    async getProfessionalReview(
+        @Query('page') page : number,
+        @Query('id') id : string, 
+        @Res() res : Response
+    ) {
         try {
-            return this.reviewService.reviews(id,res)
+            return this.reviewService.reviews(id, page,res)
         } catch (error) {
             console.log(error.message)
             return res.status(200).json({message : 'Internal server error'})
