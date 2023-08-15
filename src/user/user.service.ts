@@ -200,6 +200,19 @@ export class UserService {
         }
     }
 
+    async userByEmail (email : string, @Res() res : Response) {
+        try {
+            const userData = await this.userModel.findOne({email : email})
+            if(userData){
+                return res.status(200).json(userData)
+            }
+            return res.status(404).json({message : 'Not valid'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
     async updateUser(userid : string, userData : User, @Res() res : Response) {
         try {
             await this.userModel.findByIdAndUpdate(userData._id, {$set : userData})

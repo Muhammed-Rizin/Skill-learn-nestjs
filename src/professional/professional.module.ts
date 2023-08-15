@@ -19,6 +19,7 @@ import { taskSchema } from 'src/task/schema/task.model';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from 'src/schedule/schedule.module';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { ScheduleModule } from 'src/schedule/schedule.module';
     PaymentService,
     TaskService,
     CloudinaryService,
-    ConfigService
+    ConfigService,
+    UserService
   ]
 })
 export class ProfessionalModule {}

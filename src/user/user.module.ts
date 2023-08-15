@@ -34,6 +34,7 @@ import { ScheduleModule } from 'src/schedule/schedule.module';
     ScheduleModule
   ],
   controllers: [UserController],
-  providers: [UserService, ForgetpasswordService, ChatService, VerificationService, TaskService, CloudinaryService, ConfigService]
+  providers: [UserService, ForgetpasswordService, ChatService, VerificationService, TaskService, CloudinaryService, ConfigService],
+  exports : [UserService]
 })
 export class UserModule {}

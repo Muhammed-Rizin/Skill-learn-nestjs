@@ -12,6 +12,7 @@ import { PaymentService } from 'src/payment/payment.service';
 import { Task } from 'src/task/dto/task.dto';
 import { ScheduleService } from 'src/schedule/schedule.service';
 import { Schedule } from 'src/schedule/dto/schedule.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('professional')
 export class ProfessionalController {
@@ -20,7 +21,8 @@ export class ProfessionalController {
         private readonly chatService: ChatService,
         private readonly _paymentService: PaymentService,
         private readonly _taskService: TaskService,
-        private readonly _scheduleService : ScheduleService
+        private readonly _scheduleService : ScheduleService,
+        private readonly userService : UserService
     ) { }
 
     // POST /professional/login
@@ -55,6 +57,16 @@ export class ProfessionalController {
             if (error.message === 'Email already registered') {
                 return res.status(400).json({ message: 'Email already registered' })
             }
+        }
+    }
+
+    // GET /professional/userdatabyemail
+    @Get('userdatabyemail')
+    async userDataByEmail(@Query('email') email: string, @Res() res: Response) {
+        try {
+            return await this.userService.userByEmail(email, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
         }
     }
 
