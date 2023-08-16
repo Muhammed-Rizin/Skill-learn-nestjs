@@ -218,7 +218,7 @@ export class ProfessionalService {
 
     async submitImage(userid : string, file : Express.Multer.File, @Res() res : Response){
         try {
-            const imageUrl = await this._cloudinaryService.uploadImage(file.path)
+            const imageUrl = await this._cloudinaryService.uploadImage(file)
             await this.professionalModel.findByIdAndUpdate(userid, { $set : {image : imageUrl}})
             return res.status(200).json({message : 'success'})
         } catch (error) {

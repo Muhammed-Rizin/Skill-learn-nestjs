@@ -80,8 +80,8 @@ export class AdminService {
     async getProfessionals(page : number, limit : number, @Res() res : Response){
         try {
             const skip = (page - 1) * limit
-
             const professionalData = await this.professionalModel.find({approved : true}).skip(skip).limit(limit)
+            // const totalProfessional = await this.professionalModel.find({approved : true}).skip(skip).limit(limit)
             return res.status(200).json(professionalData)
         } catch (error) {
             console.log(error.message)

@@ -195,6 +195,7 @@ export class UserController {
         @UploadedFile() file: Express.Multer.File
     ) {
         try {
+            console.log(file)
             return this.userService.submitImage(id, file, res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})

@@ -13,9 +13,11 @@ export class CloudinaryService {
     });
   }
 
-  async uploadImage(file: string): Promise<string> {
+  async uploadImage(file : Express.Multer.File): Promise<string> {
     try {
-      const result = await cloudinary.uploader.upload(file, {
+      const imageAsBase64 = file.buffer.toString('base64');
+      const dataURI = `data:text/plain;base64,${imageAsBase64}`;
+      const result = await cloudinary.uploader.upload(dataURI, {
         folder: 'profile-images'
       });
       return result.secure_url;

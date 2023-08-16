@@ -50,20 +50,28 @@ export class PaymentService {
         }
     }
 
-    async getUserHistory(id : string, @Res() res : Response) {
+    async getUserHistory(id : string, page :number, limit : number, @Res() res : Response) {
         try {
-            const data = await this.paymentModel.find({from : id}).populate('to').sort({createdAt : 1})
-            return res.status(200).json(data)
+            const skip = (page - 1) * limit
+
+            const data = await this.paymentModel.find({from : id}).populate('to').sort({createdAt : -1}).skip(skip).limit(limit)
+            const total = (await this.paymentModel.find({from : id})).length
+            
+            return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({message : 'Internal server error'})
         }
     }
 
-    async getProfessionalHistory(id : string, @Res() res : Response) {
+    async getProfessionalHistory(id : string, page : number, limit : number , @Res() res : Response) {
         try {
-            const data = await this.paymentModel.find({to : id}).populate('from').sort({createdAt : 1})
-            return res.status(200).json(data)
+            const skip = (page - 1) * limit
+
+            const data = await this.paymentModel.find({to : id}).populate('from').sort({createdAt : 1}).skip(skip).limit(limit)
+            const total = (await this.paymentModel.find({to : id})).length
+
+            return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({message : 'Internal server error'})

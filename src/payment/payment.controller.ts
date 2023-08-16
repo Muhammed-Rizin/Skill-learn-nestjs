@@ -35,11 +35,13 @@ export class PaymentController {
     // GET payment/userhistory
     @Get('userhistory')
     async userHistory(
+        @Query('page') page : number,
+        @Query('limit') limit : number,
         @Body('userid') id : string,
         @Res() res : Response
     ){
         try {
-            return await this.paymentService.getUserHistory(id,res)
+            return await this.paymentService.getUserHistory(id, page ,limit,res)
         } catch (error) {
             return res.status(500).json({message : 'Internal server error'})
         }
@@ -48,11 +50,13 @@ export class PaymentController {
     // GET payment/professionalhistory
     @Get('professionalhistory')
     async professionalHistory(
+        @Query('page') page : number,
+        @Query('limit') limit : number,
         @Body('userid') id : string,
         @Res() res : Response
     ){
         try {
-            return await this.paymentService.getProfessionalHistory(id,res)
+            return await this.paymentService.getProfessionalHistory(id, page, limit,res)
         } catch (error) {
             return res.status(500).json({message : 'Internal server error'})
         }
