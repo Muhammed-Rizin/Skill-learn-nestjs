@@ -240,8 +240,8 @@ export class UserService {
             const limit: number = 5
             const skip: number = (page - 1) * limit
 
-            const data = await this.professionalModel.find({approved : true}).skip(skip).limit(limit)
-            const totalProfessional = (await this.professionalModel.find({approved : true})).length
+            const data = await this.professionalModel.find({approved : true, blocked : false}).skip(skip).limit(limit)
+            const totalProfessional = (await this.professionalModel.find({approved : true, blocked : false})).length
 
             return res.status(200).json({data, totalProfessional})
         } catch (error) {
