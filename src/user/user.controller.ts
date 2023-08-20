@@ -42,6 +42,19 @@ export class UserController {
         }
     }
 
+    // GET /user/checkemail
+    @Get('checkemail')
+    async checkEmail(
+        @Query('email') email : string,
+        @Res() res : Response 
+    ){
+        try {
+            return await this.userService.checkEmail(email , res)
+        } catch (error) {
+            return res.status(200).json({ message: 'Email already registered' })
+        }
+    }
+
     // POST /user/register
     @Post('register')
     async userRegister(
@@ -119,7 +132,10 @@ export class UserController {
     }
     // GET /user/getchats
     @Get('getchats')
-    async getchats(@Body('userid') userid: string, @Res() res: Response) {
+    async getchats(
+        @Body('userid') userid: string,
+        @Res() res: Response
+    ){
         try {
             return await this.chatService.getChats(userid, res)
         } catch (error) {
@@ -128,9 +144,14 @@ export class UserController {
     }
     // GET /user/getchathistory
     @Get('getchathistory')
-    async getChathistory(@Query('roomid') roomid: string, @Res() res: Response) {
+    async getChathistory(
+        @Query('roomid') roomid: string, 
+        @Query('page') page : number,
+        @Query('limit') limit : number,
+        @Res() res: Response
+    ) {
         try {
-            return await this.chatService.getChatHistory(roomid, res)
+            return await this.chatService.getChatHistory(roomid, page, limit, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -195,7 +216,6 @@ export class UserController {
         @UploadedFile() file: Express.Multer.File
     ) {
         try {
-            console.log(file)
             return this.userService.submitImage(id, file, res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})

@@ -52,6 +52,21 @@ export class ProfessionalService {
         }
     }
 
+    // check email
+    async checkEmail(email : string, @Res() res :Response){
+        try {
+            const alreadyData = await this.professionalModel.findOne({email :email})
+            if(alreadyData){
+                return res.status(400).json({message : 'Email already registered'})
+            }
+        
+            res.status(200).json({message : 'success'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
 
     async professionalRegister(data : Professional, @Res() res : Response){
         try {

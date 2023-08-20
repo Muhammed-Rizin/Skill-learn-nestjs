@@ -60,6 +60,20 @@ export class ProfessionalController {
         }
     }
 
+    
+    // GET /user/checkemail
+    @Get('checkemail')
+    async checkEmail(
+        @Query('email') email : string,
+        @Res() res : Response 
+    ){
+        try {
+            return await this.professionalService.checkEmail(email , res)
+        } catch (error) {
+            return res.status(200).json({ message: 'Email already registered' })
+        }
+    }
+
     // GET /professional/userdatabyemail
     @Get('userdatabyemail')
     async userDataByEmail(@Query('email') email: string, @Res() res: Response) {
@@ -129,9 +143,14 @@ export class ProfessionalController {
     }
     // GET /professional/getchathistory
     @Get('getchathistory')
-    async getChathistory(@Query('roomid') roomid: string, @Res() res: Response) {
+    async getChathistory(
+        @Query('roomid') roomid: string, 
+        @Query('page') page : number,
+        @Query('limit') limit : number,
+        @Res() res: Response
+    ) {
         try {
-            return await this.chatService.getChatHistory(roomid, res)
+            return await this.chatService.getChatHistory(roomid, page , limit, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -268,6 +287,19 @@ export class ProfessionalController {
     ){
         try {
             return await this._scheduleService.getCompleted(id, page, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
+
+    // PATCH /professional/meetingdone
+    @Patch('meetingdone')
+    async meetingDone(
+        @Body('id') id : string,
+        @Res() res : Response
+    ) {
+        try {
+            return await this._scheduleService.meetingDone(id, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }

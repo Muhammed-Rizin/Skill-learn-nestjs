@@ -26,6 +26,21 @@ export class UserService {
         private readonly _cloudinaryService : CloudinaryService
     ){}
 
+    // check email
+    async checkEmail(email : string, @Res() res :Response){
+        try {
+            const alreadyData = await this.userModel.findOne({email :email})
+            if(alreadyData){
+                return res.status(400).json({message : 'Email already registered'})
+            }
+        
+            res.status(200).json({message : 'success'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
     // User login 
     async userLogin(email : string, password : string, @Res() res: Response) {
         try {
@@ -62,11 +77,6 @@ export class UserService {
     // User Register
     async userRegister(data : User, @Res() res : Response){
         try {
-            const alreadyData = await this.userModel.findOne({email : data.email})
-            if(alreadyData){
-                return res.status(400).json({message : 'Email already registered'})
-            }
-
             const { email, password, firstName, lastName, education} = data 
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(password, salt)

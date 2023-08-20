@@ -97,10 +97,18 @@ export class ChatService {
         }
     }
 
-    async getChatHistory(roomId: string, @Res() res: Response) {
+    async getChatHistory(roomId: string, page : number, limit : number, @Res() res: Response) {
         try {
+            limit = Number(limit)
+            const skip = (page - 1) * limit
             const chatData = await this.messageModel.findOne({ roomId: roomId }).populate('messages.sender').populate('messages.recever')
-            return res.status(200).json(chatData)
+            const actualChat = await this.messageModel.findOne({roomId})
+            
+            const total = actualChat.messages.length
+            const start = total - (skip + limit as number) >0 ? total - (skip + limit as number) : 0
+            chatData.messages = chatData.messages.slice(start, total - skip)
+        
+            return res.status(200).json({chatData, total})
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({ message: 'internal server error' })
