@@ -103,9 +103,8 @@ export class AdminService {
 
     async blockUser(id : string, @Res() res : Response){
         try {
-            const data = await this.userModel.findByIdAndUpdate(id, {$set : {blocked : true}})
-            const userData = await this.findUsers(res)
-            return res.status(200).json(userData)
+            await this.userModel.findByIdAndUpdate(id, {$set : {blocked : true}})
+            return res.status(200).json(id)
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({status : 'error', message : 'User blocking failed'})
@@ -115,8 +114,7 @@ export class AdminService {
     async unblockUser(id : string, @Res() res : Response){
         try {
             await this.userModel.findByIdAndUpdate(id, {blocked : false})
-            const userData = await this.findUsers(res)
-            return res.status(200).json(userData)
+            return res.status(200).json(id)
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({message : 'User unblocking failed'})
@@ -127,8 +125,8 @@ export class AdminService {
         try {
             const professionalId = new mongoose.Types.ObjectId(id)
             await this.professionalModel.findByIdAndUpdate(professionalId, {$set : {approved : true, rejected : false}})
-            const professionalData = await this.professionalModel.find({approved : false})
-            return res.status(200).json(professionalData)
+
+            return res.status(200).json(id)
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({message : 'Professional approving failed'})
@@ -139,8 +137,8 @@ export class AdminService {
         try {
             const id = new mongoose.Types.ObjectId(professionalId)
             await this.professionalModel.findByIdAndUpdate(id, {$set : {rejected : true}})
-            const professionalData = await this.professionalModel.find({approved : false})
-            return res.status(200).json(professionalData)
+
+            return res.status(200).json(id)
         } catch (error) {
             console.log(error.message)
             return res.status(500).json({message : 'Professional rejection failed'})
@@ -152,8 +150,7 @@ export class AdminService {
         try {
             const id = new mongoose.Types.ObjectId(professionalId)
             await this.professionalModel.findByIdAndUpdate(id, {blocked : true})
-            const data = await this.findProfessionals(res)
-            return res.status(200).json(data)
+            return res.status(200).json(id)
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status : 'error', message : 'Professional blocking failed'})
@@ -164,8 +161,8 @@ export class AdminService {
         try {
             const id = new mongoose.Types.ObjectId(professionalId)
             await this.professionalModel.findByIdAndUpdate(id, {blocked : false})
-            const data = await this.findProfessionals(res)
-            return res.status(200).json(data)
+            
+            return res.status(200).json(id)
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status : 'error', message : 'Professional unblocking failed'})

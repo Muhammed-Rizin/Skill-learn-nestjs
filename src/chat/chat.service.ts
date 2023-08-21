@@ -102,9 +102,12 @@ export class ChatService {
             limit = Number(limit)
             const skip = (page - 1) * limit
             const chatData = await this.messageModel.findOne({ roomId: roomId }).populate('messages.sender').populate('messages.recever')
-            const actualChat = await this.messageModel.findOne({roomId})
+            // const actualChat = await this.messageModel.findOne({roomId})
             
-            const total = actualChat.messages.length
+            if(!chatData){
+                return res.status(404).json({message : "Invalid roomid"})
+            }
+            const total = chatData.messages.length
             const start = total - (skip + limit as number) >0 ? total - (skip + limit as number) : 0
             chatData.messages = chatData.messages.slice(start, total - skip)
         
