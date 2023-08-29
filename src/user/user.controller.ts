@@ -72,7 +72,7 @@ export class UserController {
 
 
     // GET  /user/forgetpassword
-    @Get('forgetpa/user/forgetpassword/user_detailsssword')
+    @Get('forgetpassword')
     async userForgetPassword(@Query('email') email: string, @Res() res: Response) {
         try {
             return this.userService.userforgetPassword(email, res)
