@@ -245,6 +245,7 @@ export class ProfessionalService {
     async setNotification(id : string, token : string, @Res() res : Response){
         try {
             await this.professionalModel.findByIdAndUpdate(id, {$set : {notificationToken : token}})
+            res.status(200).json({message : 'succcess'})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})

@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 import { ProfessionalService } from './professional.service';
 import { Professional } from './professional.model';
-import { ChatService } from 'src/chat/chat.service';
+import { ChatService } from 'src/socket/socket.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { AuthService } from 'src/auth/auth.service';
@@ -103,11 +103,13 @@ export class ProfessionalController {
         return this.professionalService.newPassword(password, token, res)
     }
 
+    // GET /professional/isblocked
     @Get('isblocked')
     async isblocked(@Body('userid') id: string, @Res() res: Response) {
         return await this.professionalService.isBlocked(id, res)
     }
 
+    // GET /professional/isapproved
     @Get('isapproved')
     async isapproved(@Body('userid') id: string, @Res() res: Response) {
         return await this.professionalService.isApproved(id, res)
@@ -157,6 +159,7 @@ export class ProfessionalController {
     }
 
 
+    // GET /professional/sendverifymail
     @Get('sendverifymail')
     async sendVerifyEmail(@Body('userid') userid: string, @Res() res: Response) {
         try {
@@ -180,6 +183,7 @@ export class ProfessionalController {
         }
     }
 
+    // POST /professional/uploadimage
     @Post('uploadimage')
     @UseInterceptors(FileInterceptor('image'))
     async uploadFile(
@@ -305,7 +309,7 @@ export class ProfessionalController {
         }
     }
 
-    // @PATCH /professional/setnotification
+    // PATCH /professional/setnotification
     @Patch('setnotification')
     async setNotification(
         @Body('token') token : string,
@@ -319,7 +323,7 @@ export class ProfessionalController {
         }
     }
 
-    //  PATCH /professional/messageseen
+    // PATCH /professional/messageseen
     @Patch('messageseen')
     async setReadStatus(@Query('roomid') roomId : string, @Res() res : Response){
         try {

@@ -12,7 +12,7 @@ export class ChatService {
     constructor(
         @InjectModel('Message') private readonly messageModel: Model<Message>,
         @InjectModel('Call') private readonly callModel: Model<Video>,
-        ) { }
+    ) { }
 
     async saveMessage(messageDto: MessageDto): Promise<Message> {
         const { roomName, message, from, to, type, receverType } = messageDto;

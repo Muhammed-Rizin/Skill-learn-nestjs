@@ -245,15 +245,51 @@ export class UserService {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }
     }
-    async getProfessionals(page : number, @Res() res : Response) {
+    async getProfessionals(@Res() res : Response) {
         try {
-            const limit: number = 5
-            const skip: number = (page - 1) * limit
-
-            const data = await this.professionalModel.find({approved : true, blocked : false}).skip(skip).limit(limit)
-            const totalProfessional = (await this.professionalModel.find({approved : true, blocked : false})).length
-
-            return res.status(200).json({data, totalProfessional})
+            const professionalsWithRatings = await this.professionalModel.aggregate([
+                {
+                  $match: {
+                    approved: true,
+                    blocked: false,
+                  },
+                },
+                {
+                  $lookup: {
+                    from: 'reviews', // Name of the "Review" collection
+                    localField: '_id',
+                    foreignField: 'professional',
+                    as: 'reviews',
+                  },
+                },
+                {
+                  $unwind: {
+                    path: '$reviews',
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
+                {
+                    $group: {
+                      _id: '$_id',
+                      professional: { $first: '$$ROOT' }, // Include the entire professional document
+                      averageRating: { $avg: '$reviews.rating' },
+                    },
+                  },
+                  {
+                    $replaceRoot: {
+                      newRoot: {
+                        $mergeObjects: ['$professional', { averageRating: '$averageRating' }],
+                      },
+                    },
+                  },
+                  {
+                    $sort: {
+                      _id: 1, // Sort by the professional's _id in ascending order
+                    },
+                  }
+              ]);
+              return res.status(200).json({ data: professionalsWithRatings });
+              
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})

@@ -2,7 +2,7 @@ import { Body, OnModuleInit } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io'
 import { MessageDto } from './dto/chat.dto';
-import { ChatService } from './chat.service';
+import { ChatService } from './socket.service';
 
 @WebSocketGateway({ cors: { origin: ['http://localhost:3000', 'https://skilllearn.netlify.app'], credentials: true } })
 export class ChatGateway implements OnGatewayConnection {

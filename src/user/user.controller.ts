@@ -5,7 +5,7 @@ import * as path from 'path';
 
 import { UserService } from './user.service';
 import { User } from './user.model';
-import { ChatService } from 'src/chat/chat.service';
+import { ChatService } from 'src/socket/socket.service';
 import { diskStorage } from 'multer';
 import { TaskService } from 'src/task/task.service';
 import { Task } from 'src/task/dto/task.dto';
@@ -171,6 +171,7 @@ export class UserController {
         }
     }
 
+    // GET /user/sendverifymail
     @Get('sendverifymail')
     async sendVerifyEmail(@Body('userid') userid: string, @Res() res: Response) {
         try {
@@ -201,7 +202,7 @@ export class UserController {
         @Res() res : Response
     ){
         try {
-            return this.userService.getProfessionals(page, res)
+            return this.userService.getProfessionals(res)
         } catch (error) {
             res.status(500).json({status: 'error', message: 'internal server error'})
         }

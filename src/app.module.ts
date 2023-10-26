@@ -14,14 +14,16 @@ import { VerificationService } from './mail/verification/verification.service';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { excluded } from './auth/exclude.auth';
-import { ChatGateway } from './chat/chat.gateway';
-import { ChatService } from './chat/chat.service';
-import { ChatModule } from './chat/chat.module';
+import { ChatGateway } from './socket/socket.gateway';
+import { ChatService } from './socket/socket.service';
+import { ChatModule } from './socket/socket.module';
 import { PaymentModule } from './payment/payment.module';
 import { TaskModule } from './task/task.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { ReviewModule } from './review/review.module';
+import { NotificationController } from './notification/notification.controller';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { ReviewModule } from './review/review.module';
     CloudinaryModule,
     ScheduleModule,
     ReviewModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService, ForgetpasswordService, VerificationService, ChatGateway, ChatService],

@@ -1,5 +1,5 @@
 import { Injectable, Res } from '@nestjs/common';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Review, addReview } from './dto/review.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Response } from 'express';
@@ -34,10 +34,20 @@ export class ReviewService {
 
             const data = await this._reviewModel.find({professional : id}).populate('user')
             .sort({createdAt : -1}).skip(skip).limit(limit)
-
+           
+            const averageRating = await this._reviewModel.aggregate([
+                {
+                $match : { professional : new mongoose.Types.ObjectId(id)}
+                },
+                {
+                $group : {_id : null, averageRating : {$avg : '$rating'}}
+                }
+            ])
+            const average = averageRating[0]?.averageRating
             const total = (await this._reviewModel.find({professional : id}).populate('user')).length
-            return res.status(200).json({data, total})
+            return res.status(200).json({data, total, average})
         } catch (error) {
+            console.log(error.message)
             return res.status(200).json({message : 'Internal server error'})
             
         }

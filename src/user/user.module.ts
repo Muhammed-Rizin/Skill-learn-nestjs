@@ -7,8 +7,8 @@ import { userSchema } from './user.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
 import { professionalSchema } from 'src/professional/professional.model';
-import { ChatService } from 'src/chat/chat.service';
-import { ChatModule } from 'src/chat/chat.module';
+import { ChatService } from 'src/socket/socket.service';
+import { ChatModule } from 'src/socket/socket.module';
 import { VerificationService } from 'src/mail/verification/verification.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { TaskService } from 'src/task/task.service';
@@ -17,6 +17,7 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from 'src/schedule/schedule.module';
+import { reviewSchema } from 'src/review/schema/review.model';
 
 @Module({
   imports : [
@@ -24,6 +25,7 @@ import { ScheduleModule } from 'src/schedule/schedule.module';
       {name: 'User', schema: userSchema},
       {name: 'Professional', schema: professionalSchema},
       {name: 'Task', schema: taskSchema},
+      {name: 'Review', schema: reviewSchema}
     ]),
     JwtModule.register({
       secret: process.env.secret,

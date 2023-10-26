@@ -5,6 +5,8 @@ export const excluded = [
     '/user/forgetpassword', 
     '/user/forgetpassword/user_details', 
     '/user/newpassword',
+    '/user/userdatabyemail',
+    '/user/professionalsdata',
     '/professional/checkemail',
     '/professional/login',
     '/professional/register',
@@ -12,5 +14,7 @@ export const excluded = [
     '/professional/forgetpassword/professional_details',
     '/professional/newpassword',
     '/admin/login',
-    '/user/professionalsdata'
+    '/review/getreviews',
+    '/notification/newNotification',
+    '/notification/updateStatus',
 ] 

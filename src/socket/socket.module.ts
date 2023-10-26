@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ChatService } from './chat.service';
+import { ChatService } from './socket.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MessageSchema } from './schema/chat.model';
 import { videoSchema } from './schema/video.model';

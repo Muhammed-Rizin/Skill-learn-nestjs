@@ -14,7 +14,6 @@ export class AuthService  implements NestMiddleware {
 
         const { headers } = req;
         
-        
         const authHeader = headers['authorization'];
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(401).json({ message: 'Unauthorized' });

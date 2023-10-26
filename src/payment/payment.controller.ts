@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose';
 export class PaymentController {
     constructor( private paymentService : PaymentService){}
 
-    // GET /payment/conform
+    // POST /payment/conform
     @Post('conform') 
     async conformPayment (@Body('data') data : Payment, @Res() res : Response) {
         try {
@@ -18,7 +18,7 @@ export class PaymentController {
         }
     }
 
-    //
+    // GET /payment/subscribed
     @Get('subscribed')
     async subscribed (
         @Query('from') from : string,
