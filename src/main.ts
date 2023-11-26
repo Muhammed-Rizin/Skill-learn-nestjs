@@ -1,14 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { join } from 'path';
-import * as express from 'express';
+import * as dotenv from 'dotenv';
+dotenv.config()
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const corsOptions: CorsOptions = {
-    origin: ['http://localhost:3000', 'https://skilllearn.netlify.app',  "https://skilllearn.online"],
+    origin: allowedOrigins,
     credentials: true,
   };
   app.enableCors(corsOptions);

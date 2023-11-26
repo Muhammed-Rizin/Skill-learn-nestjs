@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -200,6 +200,20 @@ export class UserService {
     async userDataByEmail(email : string, @Res() res : Response) {
         try {
             const userData = await this.professionalModel.findOne({email : email})
+            if(userData){
+                return res.status(200).json(userData)
+            }
+            return res.status(404).json({message : 'Not valid'})
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({status: 'error', message: 'internal server error'})
+        }
+    }
+
+    async professionalData(id : string, @Res() res : Response) {
+        try {
+            const userId = new mongoose.Types.ObjectId(id)
+            const userData = await this.professionalModel.findById(userId)
             if(userData){
                 return res.status(200).json(userData)
             }

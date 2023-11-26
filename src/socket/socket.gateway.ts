@@ -1,10 +1,13 @@
-import { Body, OnModuleInit } from '@nestjs/common';
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { OnGatewayConnection , SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io'
 import { MessageDto } from './dto/chat.dto';
 import { ChatService } from './socket.service';
+import * as dotenv from 'dotenv';
+dotenv.config()
 
-@WebSocketGateway({ cors: { origin: ['http://localhost:3000', 'https://skilllearn.netlify.app', "https://skilllearn.online"], credentials: true } })
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+
+@WebSocketGateway({ cors: { origin: allowedOrigins, credentials: true } })
 export class ChatGateway implements OnGatewayConnection {
 
   constructor(private chatService : ChatService) {}

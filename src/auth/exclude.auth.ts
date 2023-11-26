@@ -6,6 +6,7 @@ export const excluded = [
     '/user/forgetpassword/user_details', 
     '/user/newpassword',
     '/user/userdatabyemail',
+    '/user/professionalData',
     '/user/professionalsdata',
     '/professional/checkemail',
     '/professional/login',

@@ -74,11 +74,11 @@ export class ProfessionalController {
         }
     }
 
-    // GET /professional/userdatabyemail
-    @Get('userdatabyemail')
-    async userDataByEmail(@Query('email') email: string, @Res() res: Response) {
+    // GET /professional/userData
+    @Get('userData')
+    async userData(@Query('id') id: string, @Res() res: Response) {
         try {
-            return await this.userService.userByEmail(email, res)
+            return await this.userService.userData(id, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }

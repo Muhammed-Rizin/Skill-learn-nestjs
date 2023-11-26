@@ -130,6 +130,16 @@ export class UserController {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }
     }
+
+    // GET /user/professional_data
+    @Get('professionalData')
+    async professionalData(@Query('id') id: string, @Res() res: Response) {
+        try {
+            return await this.userService.professionalData(id, res)
+        } catch (error) {
+            res.status(500).json({ status: 'error', message: 'internal server error' })
+        }
+    }
     // GET /user/getchats
     @Get('getchats')
     async getchats(
