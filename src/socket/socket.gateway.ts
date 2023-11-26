@@ -4,7 +4,7 @@ import { Server, Socket } from 'socket.io'
 import { MessageDto } from './dto/chat.dto';
 import { ChatService } from './socket.service';
 
-@WebSocketGateway({ cors: { origin: ['http://localhost:3000', 'https://skilllearn.netlify.app', "https://skilllearn.app"], credentials: true } })
+@WebSocketGateway({ cors: { origin: ['http://localhost:3000', 'https://skilllearn.netlify.app', "https://skilllearn.online"], credentials: true } })
 export class ChatGateway implements OnGatewayConnection {
 
   constructor(private chatService : ChatService) {}
