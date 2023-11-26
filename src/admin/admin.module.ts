@@ -3,9 +3,9 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
-import { adminSchema } from './admin.model';
-import { professionalSchema } from 'src/professional/professional.model';
-import { userSchema } from 'src/user/user.model';
+import { adminSchema } from './schema/admin.model';
+import { professionalSchema } from 'src/professional/schema/professional.model';
+import { userSchema } from 'src/user/schema/user.model';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({

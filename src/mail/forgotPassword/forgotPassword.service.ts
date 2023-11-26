@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
-export class ForgetpasswordService {
+export class ForgotPasswordService {
     private readonly transporter;
     constructor(){
         this.transporter = nodemailer.createTransport({

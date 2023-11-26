@@ -3,10 +3,10 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { userSchema } from './user.model';
+import { userSchema } from './schema/user.model';
 import { JwtModule } from '@nestjs/jwt';
-import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
-import { professionalSchema } from 'src/professional/professional.model';
+import { ForgotPasswordService } from 'src/mail/forgotPassword/forgotPassword.service';
+import { professionalSchema } from 'src/professional/schema/professional.model';
 import { ChatService } from 'src/socket/socket.service';
 import { ChatModule } from 'src/socket/socket.module';
 import { VerificationService } from 'src/mail/verification/verification.service';
@@ -36,7 +36,7 @@ import { reviewSchema } from 'src/review/schema/review.model';
     ScheduleModule
   ],
   controllers: [UserController],
-  providers: [UserService, ForgetpasswordService, ChatService, VerificationService, TaskService, CloudinaryService, ConfigService],
+  providers: [UserService, ForgotPasswordService, ChatService, VerificationService, TaskService, CloudinaryService, ConfigService],
   exports : [UserService]
 })
 export class UserModule {}

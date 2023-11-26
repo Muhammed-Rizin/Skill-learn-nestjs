@@ -6,6 +6,6 @@ export class MessageDto {
   to: string;
   time: Date;
   type: MessageType;
-  receverType: MessageType;
+  receiverType: MessageType;
   roomName : string
 }

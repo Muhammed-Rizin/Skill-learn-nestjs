@@ -4,11 +4,11 @@ import { MulterModule } from '@nestjs/platform-express';
 
 import { ProfessionalController } from './professional.controller';
 import { ProfessionalService } from './professional.service';
-import { professionalSchema } from './professional.model';
+import { professionalSchema } from './schema/professional.model';
 import { JwtModule } from '@nestjs/jwt';
-import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
+import { ForgotPasswordService } from 'src/mail/forgotPassword/forgotPassword.service';
 import { ChatService } from 'src/socket/socket.service';
-import { userSchema } from 'src/user/user.model';
+import { userSchema } from 'src/user/schema/user.model';
 import { ChatModule } from 'src/socket/socket.module';
 import { VerificationService } from 'src/mail/verification/verification.service';
 import { AuthService } from 'src/auth/auth.service';
@@ -39,7 +39,7 @@ import { UserService } from 'src/user/user.service';
   controllers: [ProfessionalController],
   providers: [
     ProfessionalService, 
-    ForgetpasswordService, 
+    ForgotPasswordService, 
     ChatService, 
     VerificationService, 
     AuthService,

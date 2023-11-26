@@ -2,7 +2,7 @@ import { Controller, Post, Body, Res, Query, Get, Patch, UseInterceptors, Upload
 import { Response } from 'express';
 
 import { ProfessionalService } from './professional.service';
-import { Professional } from './professional.model';
+import { Professional } from './dto/professional.dto';
 import { ChatService } from 'src/socket/socket.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -88,7 +88,7 @@ export class ProfessionalController {
     // GET  /professional/forgetpassword
     @Get('forgetpassword')
     async professionalForgetPassword(@Query('email') email: string, @Res() res: Response) {
-        return this.professionalService.professionalforgetPassword(email, res)
+        return this.professionalService.professionalForgetPassword(email, res)
     }
 
     // GET /professional/forgetpassword/professional_details
@@ -105,19 +105,19 @@ export class ProfessionalController {
 
     // GET /professional/isblocked
     @Get('isblocked')
-    async isblocked(@Body('userid') id: string, @Res() res: Response) {
+    async isblocked(@Body('userId') id: string, @Res() res: Response) {
         return await this.professionalService.isBlocked(id, res)
     }
 
     // GET /professional/isapproved
     @Get('isapproved')
-    async isapproved(@Body('userid') id: string, @Res() res: Response) {
+    async isapproved(@Body('userId') id: string, @Res() res: Response) {
         return await this.professionalService.isApproved(id, res)
     }
 
     // GET /professional/professionaldata
     @Get('professionaldata')
-    async getProfessionalData(@Body('userid') id: string, @Res() res: Response) {
+    async getProfessionalData(@Body('userId') id: string, @Res() res: Response) {
         try {
             return await this.professionalService.getProfessionalData(id, res)
         } catch (error) {
@@ -136,9 +136,9 @@ export class ProfessionalController {
 
     // GET /professional/getchats
     @Get('getchats')
-    async getchats(@Body('userid') userid: string, @Res() res: Response) {
+    async getchats(@Body('userId') userId: string, @Res() res: Response) {
         try {
-            return await this.chatService.getChats(userid, res)
+            return await this.chatService.getChats(userId, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -146,13 +146,13 @@ export class ProfessionalController {
     // GET /professional/getchathistory
     @Get('getchathistory')
     async getChathistory(
-        @Query('roomid') roomid: string, 
+        @Query('roomid') roomId: string, 
         @Query('page') page : number,
         @Query('limit') limit : number,
         @Res() res: Response
     ) {
         try {
-            return await this.chatService.getChatHistory(roomid, page , limit, res)
+            return await this.chatService.getChatHistory(roomId, page , limit, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -161,9 +161,9 @@ export class ProfessionalController {
 
     // GET /professional/sendverifymail
     @Get('sendverifymail')
-    async sendVerifyEmail(@Body('userid') userid: string, @Res() res: Response) {
+    async sendVerifyEmail(@Body('userId') userId: string, @Res() res: Response) {
         try {
-            return await this.professionalService.sendVerifyEmail(userid, res)
+            return await this.professionalService.sendVerifyEmail(userId, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -173,7 +173,7 @@ export class ProfessionalController {
     @Get('verifyemail')
     async verifyEmail(
         @Query('token') token: string,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -202,7 +202,7 @@ export class ProfessionalController {
     // GET /professional/getsubscribers
     @Get('getsubscribers')
     async getSubscribers(
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -215,7 +215,7 @@ export class ProfessionalController {
     // POST /professional/addTask
     @Post('addtask')
     async addTask(
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Body('task') task: Task,
         @Res() res: Response
     ) {
@@ -230,7 +230,7 @@ export class ProfessionalController {
     @Get('inprogresstask')
     async inprogressTask(
         @Query('page') page : number,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -244,7 +244,7 @@ export class ProfessionalController {
     @Get('completedtask')
     async completedTask(
         @Query('page') page : number,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -257,7 +257,7 @@ export class ProfessionalController {
     // POST /professional/schedule
     @Post('schedule')
     async scheduleMeeting(
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Body('schedule') meeting: Schedule,
         @Res() res : Response
     ){
@@ -272,7 +272,7 @@ export class ProfessionalController {
     @Get('inprogressmeeting')
     async inProgressMeeting(
         @Query('page') page : number,
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res : Response
     ){
         try {
@@ -286,7 +286,7 @@ export class ProfessionalController {
     @Get('completedmeeting')
     async completedMeeting(
         @Query('page') page : number,
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res : Response
     ){
         try {
@@ -313,7 +313,7 @@ export class ProfessionalController {
     @Patch('setnotification')
     async setNotification(
         @Body('token') token : string,
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res :Response
     ){
         try {

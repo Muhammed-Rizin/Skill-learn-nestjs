@@ -13,11 +13,11 @@ export class ReviewController {
     async addReview(
         @Body('id') professionalId : string,
         @Body('data') data : addReview,
-        @Body('userid') userid : string,
+        @Body('userId') userId : string,
         @Res() res : Response
     ) {
         try {
-            this.reviewService.addReview(professionalId ,userid, data, res) 
+            this.reviewService.addReview(professionalId ,userId, data, res) 
         } catch (error) {
             console.log(error.message)
             return res.status(200).json({message : 'Internal server error'})

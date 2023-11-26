@@ -4,7 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
 
 import { UserService } from './user.service';
-import { User } from './user.model';
+import { User } from './dto/user.dto';
 import { ChatService } from 'src/socket/socket.service';
 import { diskStorage } from 'multer';
 import { TaskService } from 'src/task/task.service';
@@ -75,7 +75,7 @@ export class UserController {
     @Get('forgetpassword')
     async userForgetPassword(@Query('email') email: string, @Res() res: Response) {
         try {
-            return this.userService.userforgetPassword(email, res)
+            return this.userService.userForgotPassword(email, res)
         } catch (error) {
             res.status(500).json({ status: 'error', message: 'internal server error' })
         }
@@ -103,7 +103,7 @@ export class UserController {
 
     // GET /user/isblocked
     @Get('isblocked')
-    async isblocked(@Body('userid') id: string, @Res() res: Response) {
+    async isblocked(@Body('userId') id: string, @Res() res: Response) {
         try {
             return await this.userService.isBlocked(id, res)
         } catch (error) {
@@ -113,7 +113,7 @@ export class UserController {
 
     // GET /user/userdata
     @Get('userdata')
-    async userData(@Body('userid') id: string, @Res() res: Response) {
+    async userData(@Body('userId') id: string, @Res() res: Response) {
         try {
             return await this.userService.userData(id, res)
         } catch (error) {
@@ -133,11 +133,11 @@ export class UserController {
     // GET /user/getchats
     @Get('getchats')
     async getchats(
-        @Body('userid') userid: string,
+        @Body('userId') userId: string,
         @Res() res: Response
     ){
         try {
-            return await this.chatService.getChats(userid, res)
+            return await this.chatService.getChats(userId, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -145,13 +145,13 @@ export class UserController {
     // GET /user/getchathistory
     @Get('getchathistory')
     async getChathistory(
-        @Query('roomid') roomid: string, 
+        @Query('roomid') roomId: string, 
         @Query('page') page : number,
         @Query('limit') limit : number,
         @Res() res: Response
     ) {
         try {
-            return await this.chatService.getChatHistory(roomid, page, limit, res)
+            return await this.chatService.getChatHistory(roomId, page, limit, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -160,12 +160,12 @@ export class UserController {
     // PATCH /user/updateuser
     @Patch('updateuser')
     async updateUser(
-        @Body('userid') userid: string,
+        @Body('userId') userId: string,
         @Body('data') userData: User,
         @Res() res: Response
     ) {
         try {
-            return await this.userService.updateUser(userid, userData, res)
+            return await this.userService.updateUser(userId, userData, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -173,9 +173,9 @@ export class UserController {
 
     // GET /user/sendverifymail
     @Get('sendverifymail')
-    async sendVerifyEmail(@Body('userid') userid: string, @Res() res: Response) {
+    async sendVerifyEmail(@Body('userId') userId: string, @Res() res: Response) {
         try {
-            return await this.userService.sendVerifyEmail(userid, res)
+            return await this.userService.sendVerifyEmail(userId, res)
         } catch (error) {
             res.status(500).json({ message: 'internal server error' })
         }
@@ -185,7 +185,7 @@ export class UserController {
     @Get('verifyemail')
     async verifyEmail(
         @Query('token') token: string,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -227,7 +227,7 @@ export class UserController {
     @Get('inprogresstask')
     async inprogressTask(
         @Query('page') page : number,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -241,7 +241,7 @@ export class UserController {
     @Get('completedtask')
     async completedTask(
         @Query('page') page : number,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ) {
         try {
@@ -254,7 +254,7 @@ export class UserController {
     // PATCH /user/taskdone
     @Patch('taskdone')
     async doneTask(
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Body('taskid') taskId : string,
         @Res() res :Response 
     ){
@@ -269,7 +269,7 @@ export class UserController {
     @Get('inprogressmeeting')
     async inProgressMeeting(
         @Query('page') page : number,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ){
         try {
@@ -283,7 +283,7 @@ export class UserController {
     @Get('completedmeeting')
     async completedMeeting(
         @Query('page') page : number,
-        @Body('userid') id: string,
+        @Body('userId') id: string,
         @Res() res: Response
     ){
         try {
@@ -297,7 +297,7 @@ export class UserController {
     @Patch('setnotification')
     async setNotification(
         @Body('token') token : string,
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res :Response
     ){
         try {

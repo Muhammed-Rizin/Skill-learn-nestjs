@@ -11,7 +11,7 @@ export const taskSchema = new mongoose.Schema({
         required : true,
         ref: "User"
     },
-    endtime: {
+    endTime: {
         type : Date,
         required : true
     },

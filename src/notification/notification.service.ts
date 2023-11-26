@@ -31,7 +31,7 @@ export class NotificationService {
 
     async getNotification(userId : string, res : Response) {
         try {
-            const notifications = await this.notificationModel.find({to : userId, read : false})
+            const notifications = await this.notificationModel.find({to : userId, read : false}).sort({ _id : -1 })
             res.status(200).json({notifications})
         } catch (error) {
             return res.status(500).json({message : 'internal server error'})

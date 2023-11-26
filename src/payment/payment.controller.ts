@@ -37,7 +37,7 @@ export class PaymentController {
     async userHistory(
         @Query('page') page : number,
         @Query('limit') limit : number,
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res : Response
     ){
         try {
@@ -52,7 +52,7 @@ export class PaymentController {
     async professionalHistory(
         @Query('page') page : number,
         @Query('limit') limit : number,
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res : Response
     ){
         try {

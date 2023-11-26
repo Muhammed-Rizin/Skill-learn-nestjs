@@ -1,18 +1,3 @@
-import * as mongoose from 'mongoose'
-
-export const adminSchema = new mongoose.Schema({
-    email : {
-        type : String,
-        required : true
-    },
-    password : {
-        type : String,
-        required : true
-    },
-    token : {
-        type : String
-    }
-})
 
 export interface Admin {
     _id?: string
@@ -38,7 +23,7 @@ export interface User {
     bio ?: string
     address ?: string
     image ?: string
-    emailverified ?: boolean
+    emailVerified ?: boolean
 }
 
 export interface Professional {
@@ -57,7 +42,7 @@ export interface Professional {
     bio ?: string
     address ?: string
     image ?: string
-    emailverified ?: boolean
+    emailVerified ?: boolean
     experience ?: string
     payment ?: number
     skills ?: string[]

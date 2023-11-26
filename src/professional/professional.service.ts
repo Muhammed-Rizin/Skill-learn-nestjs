@@ -7,8 +7,8 @@ import * as bcrypt from 'bcrypt';
 import * as path from 'path';
 import * as randomstring from 'randomstring'
 
-import { Professional } from './professional.model';
-import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
+import { Professional } from './dto/professional.dto';
+import { ForgotPasswordService } from 'src/mail/forgotPassword/forgotPassword.service';
 import { VerificationService } from 'src/mail/verification/verification.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
@@ -18,7 +18,7 @@ export class ProfessionalService {
     constructor(
         @InjectModel('Professional') private readonly professionalModel : Model<Professional>,
         private readonly jwt : JwtService,
-        private forgetPassword : ForgetpasswordService,
+        private forgetPassword : ForgotPasswordService,
         private verification : VerificationService,
         private _paymentService : PaymentService,
         private _cloudinaryService : CloudinaryService
@@ -113,7 +113,7 @@ export class ProfessionalService {
         }
     }
 
-    async professionalforgetPassword(email : string, @Res() res : Response){
+    async professionalForgetPassword(email : string, @Res() res : Response){
         try {
             const professionalData = await this.professionalModel.findOne({email : email})
             if(!professionalData){
@@ -149,8 +149,8 @@ export class ProfessionalService {
             const professionalData = await this.professionalModel.findOneAndUpdate({token : token}, {$set : {password : hashedPassword}})
 
             const payload = { _id: professionalData._id };
-            const jwttoken = this.jwt.sign(payload);
-            const data = await this.professionalModel.findOneAndUpdate({_id : professionalData._id},{$set : {token : jwttoken}})
+            const jwtToken = this.jwt.sign(payload);
+            const data = await this.professionalModel.findOneAndUpdate({_id : professionalData._id},{$set : {token : jwtToken}})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -177,9 +177,9 @@ export class ProfessionalService {
         }
     }
 
-    async getProfessionalData(userid : string, @Res() res : Response) {
+    async getProfessionalData(userId : string, @Res() res : Response) {
         try {
-            const data = await this.professionalModel.findById(userid)
+            const data = await this.professionalModel.findById(userId)
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -204,7 +204,7 @@ export class ProfessionalService {
                 await this.professionalModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
                 return res.status(200).json({message : 'success'})
             }else {
-                return res.status(404).json({message : 'inavlid token'})
+                return res.status(404).json({message : 'invalid token'})
             }
         } catch (error) {
             console.log(error.message)
@@ -212,9 +212,9 @@ export class ProfessionalService {
         }
     }
 
-    async sendVerifyEmail(userid : string, @Res() res : Response) {
+    async sendVerifyEmail(userId : string, @Res() res : Response) {
         try {
-            const userData = await this.professionalModel.findById(userid)
+            const userData = await this.professionalModel.findById(userId)
             if(!userData){
                 return res.status(404).json({message : 'Email not registered'})
             }
@@ -231,10 +231,10 @@ export class ProfessionalService {
         }
     }
 
-    async submitImage(userid : string, file : Express.Multer.File, @Res() res : Response){
+    async submitImage(userId : string, file : Express.Multer.File, @Res() res : Response){
         try {
             const imageUrl = await this._cloudinaryService.uploadImage(file)
-            await this.professionalModel.findByIdAndUpdate(userid, { $set : {image : imageUrl}})
+            await this.professionalModel.findByIdAndUpdate(userId, { $set : {image : imageUrl}})
             return res.status(200).json({message : 'success'})
         } catch (error) {
             console.log(error.message)
@@ -245,7 +245,7 @@ export class ProfessionalService {
     async setNotification(id : string, token : string, @Res() res : Response){
         try {
             await this.professionalModel.findByIdAndUpdate(id, {$set : {notificationToken : token}})
-            res.status(200).json({message : 'succcess'})
+            res.status(200).json({message : 'success'})
         } catch (error) {
             console.log(error.message)
             res.status(500).json({status: 'error', message: 'internal server error'})

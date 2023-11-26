@@ -2,7 +2,7 @@ export interface Task {
     user : String,
     task : string,
     description : string,
-    endtime : Date,
+    endTime : Date,
 }
 
 export interface CompleteTask {
@@ -10,6 +10,6 @@ export interface CompleteTask {
     to : string,
     task : string,
     description : string,
-    endtime : string,
+    endTime : string,
     completed : boolean
 }

@@ -9,7 +9,7 @@ import { UserModule } from './user/user.module';
 import { AdminModule } from './admin/admin.module';
 import { ProfessionalModule } from './professional/professional.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ForgetpasswordService } from './mail/forgetpassword/forgetpassword.service';
+import { ForgotPasswordService } from './mail/forgotPassword/forgotPassword.service';
 import { VerificationService } from './mail/verification/verification.service';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
@@ -46,7 +46,7 @@ import { NotificationModule } from './notification/notification.module';
     NotificationModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ForgetpasswordService, VerificationService, ChatGateway, ChatService],
+  providers: [AppService, ForgotPasswordService, VerificationService, ChatGateway, ChatService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

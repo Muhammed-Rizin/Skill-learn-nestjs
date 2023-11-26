@@ -12,7 +12,7 @@ export class NotificationController {
     // GET /notification/getNotification
     @Get('getNotification') 
     getNotification(
-        @Body('userid') id : string,
+        @Body('userId') id : string,
         @Res() res : Response
     ) {
         try {
@@ -35,7 +35,7 @@ export class NotificationController {
         }
     }
 
-    // PATCH /notifiacation/updateStatus
+    // PATCH /notification/updateStatus
     @Patch('updateStatus')
     updateStatus(
         @Body('userId') id : string,

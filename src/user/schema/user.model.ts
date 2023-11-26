@@ -58,24 +58,3 @@ export const userSchema = new mongoose.Schema({
         type : String
     }
 })
-
-export interface User {
-    _id?: string
-    email: string
-    password: string
-    firstName: string
-    lastName: string
-    education: string
-    google?: boolean
-    blocked?: boolean
-    __v?: number
-    token?: string
-    location ?: string
-    birthday ?: Date
-    bio ?: string
-    address ?: string
-    image ?: string
-    emailverified ?: boolean
-    emailToken?: string
-    notificationToken?: string
-}

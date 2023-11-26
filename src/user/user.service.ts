@@ -8,9 +8,9 @@ import * as randomstring from 'randomstring'
 import * as dotenv from 'dotenv';
 dotenv.config()
 
-import { User } from './user.model';
-import { ForgetpasswordService } from 'src/mail/forgetpassword/forgetpassword.service';
-import { Professional } from 'src/professional/professional.model';
+import { User } from './dto/user.dto';
+import { ForgotPasswordService } from 'src/mail/forgotPassword/forgotPassword.service';
+import { Professional } from 'src/professional/dto/professional.dto';
 import { VerificationService } from 'src/mail/verification/verification.service';
 import * as path from 'path';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
@@ -21,7 +21,7 @@ export class UserService {
         @InjectModel('User') private readonly userModel : Model<User>,
         @InjectModel('Professional') private readonly professionalModel : Model<Professional>,
         private readonly jwt : JwtService,
-        private forgetPassword : ForgetpasswordService,
+        private forgetPassword : ForgotPasswordService,
         private verification : VerificationService,
         private readonly _cloudinaryService : CloudinaryService
     ){}
@@ -111,7 +111,7 @@ export class UserService {
 
 
     // forget password 
-    async userforgetPassword(email : string, @Res() res : Response){
+    async userForgotPassword(email : string, @Res() res : Response){
         try {
             const userData = await this.userModel.findOne({email : email})
             if(!userData){
@@ -149,8 +149,8 @@ export class UserService {
             const userData = await this.userModel.findOneAndUpdate({token : token}, {$set : {password : hashedPassword}})
 
             const payload = { _id: userData._id };
-            const jwttoken = this.jwt.sign(payload);
-            const data = await this.userModel.findOneAndUpdate({_id : userData._id},{$set : {token : jwttoken}})
+            const jwtToken = this.jwt.sign(payload);
+            const data = await this.userModel.findOneAndUpdate({_id : userData._id},{$set : {token : jwtToken}})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)
@@ -158,9 +158,9 @@ export class UserService {
         }
     }
 
-    async sendVerifyEmail(userid : string, @Res() res : Response) {
+    async sendVerifyEmail(userId : string, @Res() res : Response) {
         try {
-            const userData = await this.userModel.findById(userid)
+            const userData = await this.userModel.findById(userId)
             if(!userData){
                 return res.status(404).json({message : 'Email not registered'})
             }
@@ -223,7 +223,7 @@ export class UserService {
         }
     }
 
-    async updateUser(userid : string, userData : User, @Res() res : Response) {
+    async updateUser(userId : string, userData : User, @Res() res : Response) {
         try {
             await this.userModel.findByIdAndUpdate(userData._id, {$set : userData})
             return res.status(200).json(userData)
@@ -296,10 +296,10 @@ export class UserService {
         }
     }
 
-    async submitImage(userid : string, file : Express.Multer.File, @Res() res : Response){
+    async submitImage(userId : string, file : Express.Multer.File, @Res() res : Response){
         try {
             const imageUrl = await this._cloudinaryService.uploadImage(file)
-            await this.userModel.findByIdAndUpdate(userid, { $set : {image : imageUrl}})
+            await this.userModel.findByIdAndUpdate(userId, { $set : {image : imageUrl}})
             return res.status(200).json({message : 'success'})
         } catch (error) {
             console.log(error.message)

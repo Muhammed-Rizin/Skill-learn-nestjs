@@ -4,7 +4,7 @@ import mongoose, { Model, mongo, set } from 'mongoose';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt'
 
-import { Admin, Professional, User } from './admin.model';
+import { Admin, Professional, User } from './dto/admin.dto';
 
 @Injectable()
 export class AdminService {

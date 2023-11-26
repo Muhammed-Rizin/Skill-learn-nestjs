@@ -18,7 +18,7 @@ export class TaskService {
                 to : task.user,
                 task : task.task,
                 description : task.description,
-                endtime : task.endtime
+                endTime : task.endTime
             })
             await data.save()
             return res.status(200).json({message : 'success'})
@@ -34,9 +34,9 @@ export class TaskService {
             const skip: number = (page - 1) * limit
             const now = new Date()
 
-            const data = await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to')
-            .sort({endtime : 1}).skip(skip).limit(limit)
-            const total = (await this._taskModel.find({from : id, endtime :{$gte : now}}).populate('to')).length
+            const data = await this._taskModel.find({from : id, endTime :{$gte : now}}).populate('to')
+            .sort({endTime : 1}).skip(skip).limit(limit)
+            const total = (await this._taskModel.find({from : id, endTime :{$gte : now}}).populate('to')).length
 
             return res.status(200).json({data, total})
         } catch (error) {
@@ -51,9 +51,9 @@ export class TaskService {
             const skip: number = (page - 1) * limit
             const now = new Date()
 
-            const data = await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to')
-            .sort({endtime : -1}).skip(skip).limit(limit)
-            const total = (await this._taskModel.find({from : id, endtime :{$lte : now}}).populate('to')).length
+            const data = await this._taskModel.find({from : id, endTime :{$lte : now}}).populate('to')
+            .sort({endTime : -1}).skip(skip).limit(limit)
+            const total = (await this._taskModel.find({from : id, endTime :{$lte : now}}).populate('to')).length
             return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
@@ -67,10 +67,10 @@ export class TaskService {
             const skip: number = (page - 1) * limit
             const now = new Date()
             
-            const data = await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from')
-            .sort({endtime : 1}).skip(skip).limit(limit)
+            const data = await this._taskModel.find({to : id, endTime :{$gte : now}}).populate('from')
+            .sort({endTime : 1}).skip(skip).limit(limit)
 
-            const total = (await this._taskModel.find({to : id, endtime :{$gte : now}}).populate('from')).length
+            const total = (await this._taskModel.find({to : id, endTime :{$gte : now}}).populate('from')).length
 
             return res.status(200).json({data, total})
         } catch (error) {
@@ -85,10 +85,10 @@ export class TaskService {
             const skip: number = (page - 1) * limit
             const now = new Date()
 
-            const data = await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from')
-            .sort({endtime : -1}).skip(skip).limit(limit)
+            const data = await this._taskModel.find({to : id, endTime :{$lte : now}}).populate('from')
+            .sort({endTime : -1}).skip(skip).limit(limit)
 
-            const total = (await this._taskModel.find({to : id, endtime :{$lte : now}}).populate('from')).length
+            const total = (await this._taskModel.find({to : id, endTime :{$lte : now}}).populate('from')).length
             return res.status(200).json({data, total})
         } catch (error) {
             console.log(error.message)
@@ -98,7 +98,7 @@ export class TaskService {
 
     async taskDone(id : string, @Res() res : Response) {
         try {
-            const data = await this._taskModel.findByIdAndUpdate(id, {$set : {completed : true}}).sort({endtime : 1})
+            const data = await this._taskModel.findByIdAndUpdate(id, {$set : {completed : true}}).sort({endTime : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)

@@ -15,7 +15,7 @@ export class ChatService {
     ) { }
 
     async saveMessage(messageDto: MessageDto): Promise<Message> {
-        const { roomName, message, from, to, type, receverType } = messageDto;
+        const { roomName, message, from, to, type, receiverType } = messageDto;
         const data = this.messageModel.findOneAndUpdate(
             { roomId: roomName },
             {
@@ -25,8 +25,8 @@ export class ChatService {
                         sender: from,
                         senderType: type,
                         time: new Date(),
-                        receverType : receverType,
-                        recever : to,
+                        receiverType : receiverType,
+                        receiver : to,
                     },
                 },
                 $addToSet: { users: [from, to] },
@@ -36,9 +36,9 @@ export class ChatService {
         );
 
         if(type === "User"){
-            this.updateProfessionalStatusAsUnreed(roomName)
+            this.updateProfessionalStatusAsUnread(roomName)
         }else {
-            this.updateUserStatusAsUnreed(roomName)
+            this.updateUserStatusAsUnread(roomName)
         }
         return data
     }
@@ -47,18 +47,18 @@ export class ChatService {
         return this.messageModel
           .findOne({ roomId: roomName })
           .populate('messages.sender')
-          .populate('messages.recever');
+          .populate('messages.receiver');
     }
 
 
-    async updateUserStatusAsUnreed(roomId: string) {
+    async updateUserStatusAsUnread(roomId: string) {
         try{
             await this.messageModel.findOneAndUpdate({roomId : roomId}, {$set : {userRead : false}})
         }catch(error){
             console.log(error.message)
         }
     } 
-    async updateProfessionalStatusAsUnreed(roomId: string) {
+    async updateProfessionalStatusAsUnread(roomId: string) {
         try{
             await this.messageModel.findOneAndUpdate({roomId : roomId}, {$set : {professionalRead : false}})
         }catch(error){
@@ -86,10 +86,12 @@ export class ChatService {
         }
     }
 
-    async getChats(userid: string, @Res() res: Response) {
+    async getChats(userId: string, @Res() res: Response) {
         try {
-            const chatDetails = await this.messageModel.find({ $or: [{ 'messages.sender': userid }, { users: userid }] })
-                .populate('messages.sender').populate('messages.recever')
+            
+            const chatDetails = await this.messageModel.find({ $or: [{ 'messages.sender': userId }, { users: userId }] })
+                .populate('messages.sender').populate('messages.receiver')
+
             res.status(200).json(chatDetails)
         } catch (error) {
             console.log(error.message)
@@ -101,11 +103,11 @@ export class ChatService {
         try {
             limit = Number(limit)
             const skip = (page - 1) * limit
-            const chatData = await this.messageModel.findOne({ roomId: roomId }).populate('messages.sender').populate('messages.recever')
+            const chatData = await this.messageModel.findOne({ roomId: roomId }).populate('messages.sender').populate('messages.receiver')
             // const actualChat = await this.messageModel.findOne({roomId})
             
             if(!chatData){
-                return res.status(404).json({message : "Invalid roomid"})
+                return res.status(404).json({message : "Invalid roomId"})
             }
             const total = chatData.messages.length
             const start = total - (skip + limit as number) >0 ? total - (skip + limit as number) : 0

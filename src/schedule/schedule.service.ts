@@ -64,7 +64,7 @@ export class ScheduleService {
 
     async meetingDone(id : string, @Res() res :Response) {
         try {
-            const data = await this._scheduleSchema.findByIdAndUpdate(id, {$set : {completed : true}}).sort({endtime : 1})
+            const data = await this._scheduleSchema.findByIdAndUpdate(id, {$set : {completed : true}}).sort({time : 1})
             return res.status(200).json(data)
         } catch (error) {
             console.log(error.message)

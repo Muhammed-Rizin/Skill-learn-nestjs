@@ -4,7 +4,7 @@ import { Server, Socket } from 'socket.io'
 import { MessageDto } from './dto/chat.dto';
 import { ChatService } from './socket.service';
 
-@WebSocketGateway({ cors: { origin: ['http://localhost:3000', 'https://skilllearn.netlify.app'], credentials: true } })
+@WebSocketGateway({ cors: { origin: ['http://localhost:3000', 'https://skilllearn.netlify.app', "https://skilllearn.app"], credentials: true } })
 export class ChatGateway implements OnGatewayConnection {
 
   constructor(private chatService : ChatService) {}
@@ -43,7 +43,7 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('disconnect-user')
-  async handledisconnectUser(socket : Socket, roomId : string) {
+  async handleDisconnectUser(socket : Socket, roomId : string) {
     this.server.to(roomId).emit('user-disconnected', roomId)
     socket.leave(roomId)
   }
