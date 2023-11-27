@@ -251,7 +251,7 @@ export class UserService {
         try {
             const verified = await this.userModel.findOne({_id : id, emailToken : token})
             if(verified){
-                const d = await this.userModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
+                await this.userModel.findByIdAndUpdate(id, {$set : {emailVerified : true}})
                 return res.status(200).json({message : 'success'})
             }
         } catch (error) {

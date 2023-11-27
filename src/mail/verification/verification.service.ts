@@ -112,7 +112,7 @@ export class VerificationService {
 
                         <p class="last">If you initiated this verification request, please click on the following link to complete 
                         the email verification process:</p>
-                        <a href="https://skilllearn.netlify.app/verifyemail?token=${token}"><button>Verify</button></a>
+                        <a href="https://skilllearn.online/verifyemail?token=${token}"><button>Verify</button></a>
                         <p class="last">If you didn't initiate this request, please disregard this email. Rest assured, no action is required from you, and your account remains secure.</p>
                         <p>Thank you for being a valued member of Skill-Learn</p>
                         <p>Best regards,</p>
@@ -224,7 +224,7 @@ export class VerificationService {
 
                         <p class="last">If you initiated this verification request, please click on the following link to complete 
                         the email verification process:</p>
-                        <a href="https://skilllearn.netlify.app/professional/verifyemail?token=${token}"><button>Verify</button></a>
+                        <a href="https://skilllearn.online/professional/verifyemail?token=${token}"><button>Verify</button></a>
                         <p class="last">If you didn't initiate this request, please disregard this email. Rest assured, no action is required from you, and your account remains secure.</p>
                         <p>Thank you for being a valued member of Skill-Learn</p>
                         <p>Best regards,</p>

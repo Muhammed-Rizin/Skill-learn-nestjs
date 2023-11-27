@@ -6,10 +6,7 @@ import * as path from 'path';
 import { UserService } from './user.service';
 import { User } from './dto/user.dto';
 import { ChatService } from 'src/socket/socket.service';
-import { diskStorage } from 'multer';
 import { TaskService } from 'src/task/task.service';
-import { Task } from 'src/task/dto/task.dto';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { ScheduleService } from 'src/schedule/schedule.service';
 
 @Controller('user')
