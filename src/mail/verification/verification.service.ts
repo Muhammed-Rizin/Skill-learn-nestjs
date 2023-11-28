@@ -104,7 +104,7 @@ export class VerificationService {
             <body>
                 <div class="content">
                     <div class="field">
-                        <h1>Reset Password</h1>
+                        <h1>Verify Email</h1>
                         <p>Hello ${userName},</p>
                         <p>We hope this email finds you well. We have received a request to verify the email address associated with 
                         your Skill-Learn account. This verification process is an essential security measure to ensure the ownership 
@@ -216,7 +216,7 @@ export class VerificationService {
             <body>
                 <div class="content">
                     <div class="field">
-                        <h1>Reset Password</h1>
+                        <h1>Verify Email</h1>
                         <p>Hello ${userName},</p>
                         <p>We hope this email finds you well. We have received a request to verify the email address associated with 
                         your Skill-Learn account. This verification process is an essential security measure to ensure the ownership 
