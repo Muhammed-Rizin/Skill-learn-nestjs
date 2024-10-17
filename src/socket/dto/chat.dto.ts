@@ -7,5 +7,5 @@ export class MessageDto {
   time: Date;
   type: MessageType;
   receiverType: MessageType;
-  roomName : string
+  roomName: string;
 }

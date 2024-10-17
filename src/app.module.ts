@@ -1,7 +1,8 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+
 import * as dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,17 +23,16 @@ import { TaskModule } from './task/task.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { ReviewModule } from './review/review.module';
-import { NotificationController } from './notification/notification.controller';
 import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
-    UserModule, 
-    AdminModule, 
-    ProfessionalModule, 
+    UserModule,
+    AdminModule,
+    ProfessionalModule,
     MongooseModule.forRoot(process.env.mongoDb),
     JwtModule.register({
-      global : true,
+      global: true,
       secret: process.env.secret,
       signOptions: { expiresIn: '3d' },
     }),
@@ -46,10 +46,19 @@ import { NotificationModule } from './notification/notification.module';
     NotificationModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ForgotPasswordService, VerificationService, ChatGateway, ChatService],
+  providers: [
+    AppService,
+    ForgotPasswordService,
+    VerificationService,
+    ChatGateway,
+    ChatService,
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthService).exclude(...excluded).forRoutes('/*');
+    consumer
+      .apply(AuthService)
+      .exclude(...excluded)
+      .forRoutes('/*');
   }
 }

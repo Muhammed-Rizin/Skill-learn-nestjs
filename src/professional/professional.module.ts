@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from "@nestjs/mongoose";
-import { MulterModule } from '@nestjs/platform-express';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { ProfessionalController } from './professional.controller';
 import { ProfessionalService } from './professional.service';
@@ -24,30 +23,30 @@ import { UserService } from 'src/user/user.service';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      {name: 'User', schema: userSchema},
-      {name : 'Professional', schema: professionalSchema},
-      {name: 'Payment', schema: paymentSchema},
-      {name: 'Task', schema: taskSchema},
+      { name: 'User', schema: userSchema },
+      { name: 'Professional', schema: professionalSchema },
+      { name: 'Payment', schema: paymentSchema },
+      { name: 'Task', schema: taskSchema },
     ]),
     JwtModule.register({
       secret: process.env.secret,
       signOptions: { expiresIn: '30d' },
     }),
     ChatModule,
-    ScheduleModule
+    ScheduleModule,
   ],
   controllers: [ProfessionalController],
   providers: [
-    ProfessionalService, 
-    ForgotPasswordService, 
-    ChatService, 
-    VerificationService, 
+    ProfessionalService,
+    ForgotPasswordService,
+    ChatService,
+    VerificationService,
     AuthService,
     PaymentService,
     TaskService,
     CloudinaryService,
     ConfigService,
-    UserService
-  ]
+    UserService,
+  ],
 })
 export class ProfessionalModule {}

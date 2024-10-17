@@ -3,26 +3,26 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class ForgotPasswordService {
-    private readonly transporter;
-    constructor(){
-        this.transporter = nodemailer.createTransport({
-            host: process.env.host,
-            post: process.env.post,
-            secure: process.env.secure,
-            requireTLS: process.env.requireTLS,
-            auth: {
-                user: process.env.user,
-                pass: process.env.pass
-            }
-        });
-    }
+  private readonly transporter;
+  constructor() {
+    this.transporter = nodemailer.createTransport({
+      host: process.env.host,
+      post: process.env.post,
+      secure: process.env.secure,
+      requireTLS: process.env.requireTLS,
+      auth: {
+        user: process.env.user,
+        pass: process.env.pass,
+      },
+    });
+  }
 
-    forgetPassword(userName : string, email : string, token : string) {
-        const mailOptions = {
-            from: 'Skill learn <onboarding@resend.dev>',
-            to: [email],
-            subject: 'New Password',
-            html: `<!DOCTYPE html>
+  forgetPassword(userName: string, email: string, token: string) {
+    const mailOptions = {
+      from: 'Skill learn <onboarding@resend.dev>',
+      to: [email],
+      subject: 'New Password',
+      html: `<!DOCTYPE html>
             <html lang="en">
             
             <head>
@@ -116,18 +116,17 @@ export class ForgotPasswordService {
             
             </html>
             `,
+    };
 
-        };
+    return this.transporter.sendMail(mailOptions);
+  }
 
-        return this.transporter.sendMail(mailOptions);
-    }
-
-    professionalForgetPassword(userName : string, email : string, token : string) {
-        const mailOptions = {
-            from: 'Skill learn <onboarding@resend.dev>',
-            to: [email],
-            subject: 'New Password',
-            html: `<!DOCTYPE html>
+  professionalForgetPassword(userName: string, email: string, token: string) {
+    const mailOptions = {
+      from: 'Skill learn <onboarding@resend.dev>',
+      to: [email],
+      subject: 'New Password',
+      html: `<!DOCTYPE html>
             <html lang="en">
             
             <head>
@@ -221,9 +220,8 @@ export class ForgotPasswordService {
             
             </html>
             `,
+    };
 
-        };
-
-        return this.transporter.sendMail(mailOptions);
-    }
+    return this.transporter.sendMail(mailOptions);
+  }
 }

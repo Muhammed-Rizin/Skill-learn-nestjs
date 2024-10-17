@@ -3,26 +3,26 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class VerificationService {
-    private readonly transporter;
-    constructor(){
-        this.transporter = nodemailer.createTransport({
-            host: process.env.host,
-            post: process.env.post,
-            secure: process.env.secure,
-            requireTLS: process.env.requireTLS,
-            auth: {
-                user: process.env.user,
-                pass: process.env.pass
-            }
-        });
-    }
-    
-    userVerifyEmail(userName : string, email : string, token : string) {
-        const mailOptions = {
-            from: 'Skill learn <onboarding@resend.dev>',
-            to: [email],
-            subject: 'Email Verification for Your Skill-Learn Account',
-            html: `<!DOCTYPE html>
+  private readonly transporter;
+  constructor() {
+    this.transporter = nodemailer.createTransport({
+      host: process.env.host,
+      post: process.env.post,
+      secure: process.env.secure,
+      requireTLS: process.env.requireTLS,
+      auth: {
+        user: process.env.user,
+        pass: process.env.pass,
+      },
+    });
+  }
+
+  userVerifyEmail(userName: string, email: string, token: string) {
+    const mailOptions = {
+      from: 'Skill learn <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Email Verification for Your Skill-Learn Account',
+      html: `<!DOCTYPE html>
             <html lang="en">
             
             <head>
@@ -123,18 +123,17 @@ export class VerificationService {
             
             </html>
             `,
+    };
 
-        };
+    return this.transporter.sendMail(mailOptions);
+  }
 
-        return this.transporter.sendMail(mailOptions);
-    }
-
-    professionalVerifyEmail(userName : string, email : string, token : string) {
-        const mailOptions = {
-            from: 'Skill learn <onboarding@resend.dev>',
-            to: [email],
-            subject: 'Email Verification for Your Skill-Learn Account',
-            html: `<!DOCTYPE html>
+  professionalVerifyEmail(userName: string, email: string, token: string) {
+    const mailOptions = {
+      from: 'Skill learn <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Email Verification for Your Skill-Learn Account',
+      html: `<!DOCTYPE html>
             <html lang="en">
             
             <head>
@@ -235,9 +234,8 @@ export class VerificationService {
             
             </html>
             `,
+    };
 
-        };
-
-        return this.transporter.sendMail(mailOptions);
-    }
+    return this.transporter.sendMail(mailOptions);
+  }
 }
